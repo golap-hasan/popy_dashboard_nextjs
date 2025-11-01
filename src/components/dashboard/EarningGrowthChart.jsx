@@ -1,0 +1,51 @@
+
+import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const EarningGrowthChart = ({ data = [], yearlyTotal = 0, years = [], onYearChange, selectedYear }) => {
+
+    return (
+        <div className="bg-sidebar p-6 rounded-lg">
+            <div className="flex justify-between items-center mb-4">
+                <div>
+                    <h2 className="text-lg font-semibold">Earning Growth</h2>
+                    <p className="text-sm text-muted-foreground">
+                        Yearly total{' '}
+                        <span className="font-medium">৳{yearlyTotal?.toLocaleString()}</span>
+                    </p>
+                </div>
+                {years.length > 0 && (
+                    <Select onValueChange={onYearChange} value={selectedYear?.toString()}>
+                        <SelectTrigger className="w-40">
+                            <SelectValue placeholder="Year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {years?.map((year) => (
+                                <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                )}
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={data}>
+                    <CartesianGrid horizontal={false} vertical={false} strokeDasharray="1 1" />
+                    <XAxis dataKey="month" axisLine={true} tickLine={false} />
+                    <YAxis axisLine={true} tickLine={false} />
+                    <Tooltip />
+                    <Legend />
+                    <Area
+                        type="monotone"
+                        dataKey="income"
+                        name="Income"
+                        stroke="#1bd477"
+                        fill="#1bd477"
+                        fillOpacity={0.35}
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
+        </div>
+    );
+};
+
+export default EarningGrowthChart;

@@ -52,12 +52,20 @@ const Topbar = ({ onMenuClick }: TopbarProps) => {
 
   return (
     <header className="fixed top-0 right-0 left-0 flex items-center justify-between p-4 h-20 bg-sidebar text-sidebar-foreground lg:justify-end">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="lg:hidden"
+        onClick={onMenuClick}
+      >
+        <Menu />
+      </Button>
       <div className="flex items-center gap-4">
         {mounted && (
           <Button
             variant="outline"
             size="icon"
-            className="group relative rounded-full hidden md:flex p-0"
+            className="group relative rounded-full"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
           >
