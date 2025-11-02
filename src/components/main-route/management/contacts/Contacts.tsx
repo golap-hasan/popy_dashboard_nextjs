@@ -33,15 +33,15 @@ const Contacts = () => {
         </div>
       }
     >
-      <div className="flex flex-col md:flex-row md:items-start justify-between mb-4">
-        <Title title="Contacts" />
+      <div className="flex flex-col gap-3 md:flex-row md:items-start justify-between mb-4">
+        <Title title="CONTACTS MANAGEMENT" length={contacts.length} />
         <div className="relative w-full md:w-auto">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
           <Input
-            placeholder="Search contacts by name, email, or phone"
-            className="pl-10 w-full md:w-64"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm()}
+            placeholder="Search users"
+            className="w-full pl-10 md:w-64"
+            value=""
+            readOnly
           />
         </div>
       </div>

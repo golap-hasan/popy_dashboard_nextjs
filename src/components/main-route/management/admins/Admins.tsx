@@ -37,8 +37,8 @@ const Admins = () => {
           </div>
         }
       >
-        <div className="flex flex-col md:flex-row md:items-start justify-between mb-4">
-          <Title title="Admins" />
+        <div className="flex flex-col gap-3 md:flex-row md:items-start justify-between mb-4">
+          <Title title="ADMIN MANAGEMENT" length={admins.length} />
           <div className="relative w-full md:w-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
