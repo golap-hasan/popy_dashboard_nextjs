@@ -1,3 +1,4 @@
+"use client"
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
   Table,
@@ -43,7 +44,7 @@ const fulfilmentVariant = (status: string) => {
   }
 };
 
-const OrderTable = ({ data, page, limit }: { data: any; page: number; limit: number }) => {
+const OrderTable = ({ data, page, limit, onBlock }: { data: any; page: number; limit: number; onBlock: (id: string) => void }) => {
   return (
     <ScrollArea className="w-[calc(100vw-32px)] overflow-hidden overflow-x-auto md:w-full rounded-xl whitespace-nowrap">
       <Table>
@@ -97,6 +98,7 @@ const OrderTable = ({ data, page, limit }: { data: any; page: number; limit: num
                 </TableCell>
                 <TableCell className="flex gap-2">
                   <Button
+                    onClick={() => onBlock(order._id)}
                     variant="outline"
                     size="icon"
                     // onClick={() => onUpdateStatus(order)}

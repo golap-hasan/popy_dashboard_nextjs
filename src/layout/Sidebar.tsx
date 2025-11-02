@@ -13,7 +13,6 @@ import {
     GlobeLock,
     Home,
     Mail,
-    Navigation as NavigationIcon,
     PanelBottom,
     BookOpen,
     Globe,
@@ -74,7 +73,6 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
     const websiteItems = useMemo<SidebarNavItem[]>(() => [
         { name: 'Homepage', icon: Home, href: '/website/homepage' },
         { name: 'Contact', icon: Mail, href: '/website/contact' },
-        { name: 'Navigation', icon: NavigationIcon, href: '/website/navigation' },
         { name: 'Footer', icon: PanelBottom, href: '/website/footer' },
     ], []);
 

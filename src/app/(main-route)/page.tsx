@@ -133,7 +133,7 @@ const Dashboard = () => {
                 </div>
 
                 {pendingOrders.length > 0 ? (
-                    <OrderTable data={pendingOrders} page={1} limit={TABLE_LIMIT} />
+                    <OrderTable onBlock={(id: string) => { }} data={pendingOrders} page={1} limit={TABLE_LIMIT} />
                 ) : (
                     <p className="text-center text-muted-foreground">
                         No pending orders

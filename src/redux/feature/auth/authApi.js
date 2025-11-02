@@ -1,7 +1,6 @@
 import { SuccessToast, ErrorToast } from "@/lib/utils";
 import { setAccessToken, setAdmin } from "../auth/authSlice";
 import { baseApi } from "../baseApi";
-import { jwtDecode } from "jwt-decode";
 
 const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
