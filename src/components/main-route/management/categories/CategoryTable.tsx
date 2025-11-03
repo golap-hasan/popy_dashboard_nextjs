@@ -39,7 +39,7 @@ const CategoryTable = ({ data, page, limit }: { data: any; page: number; limit: 
             <TableHead>Books</TableHead>
             {/* <TableHead>Visibility</TableHead> */}
             <TableHead>Created</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -60,7 +60,7 @@ const CategoryTable = ({ data, page, limit }: { data: any; page: number; limit: 
               <TableCell className="whitespace-nowrap">
                 {formatDate(category.createdAt)}
               </TableCell>
-              <TableCell className="flex gap-2">
+              <TableCell className="flex gap-2 justify-center">
                 <Button variant="outline" size="icon">
                   <Pencil className="h-4 w-4" />
                 </Button>

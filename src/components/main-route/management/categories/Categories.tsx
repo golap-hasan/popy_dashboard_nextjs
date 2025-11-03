@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Title from "@/components/ui/Title";
 import { Input } from "@/components/ui/input";
 import CustomPagination from "@/common/CustomPagination";
@@ -53,13 +53,13 @@ const Categories = () => {
           <div className="relative w-full md:w-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search books or authors..."
+              placeholder="Search categories..."
               className="pl-10 w-full md:w-64"
               value={searchTerm}
               onChange={setSearchTerm}
             />
           </div>
-            <Button onClick={()=>setIsModalOpen(true)}>Add Book</Button>
+            <Button onClick={()=>setIsModalOpen(true)}>Add Category</Button>
         </div>
       </div>
 

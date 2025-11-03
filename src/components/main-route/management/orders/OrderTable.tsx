@@ -57,7 +57,7 @@ const OrderTable = ({ data, page, limit, onBlock }: { data: any; page: number; l
             <TableHead>Total</TableHead>
             <TableHead>Payment</TableHead>
             <TableHead>Fulfilment</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead className="text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -96,7 +96,7 @@ const OrderTable = ({ data, page, limit, onBlock }: { data: any; page: number; l
                     {order.fulfilmentStatus}
                   </Badge>
                 </TableCell>
-                <TableCell className="flex gap-2">
+                <TableCell className="flex gap-2 justify-center">
                   <Button
                     onClick={() => onBlock(order._id)}
                     variant="outline"

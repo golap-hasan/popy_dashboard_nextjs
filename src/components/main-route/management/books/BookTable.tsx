@@ -54,7 +54,7 @@ const BookTable = ({ data, page, limit }: { data: any; page: number; limit: numb
             <TableHead>Price</TableHead>
             <TableHead>Stock</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -84,7 +84,7 @@ const BookTable = ({ data, page, limit }: { data: any; page: number; limit: numb
                   {book.status?.replaceAll("_", " ")}
                 </Badge>
               </TableCell>
-              <TableCell className="flex gap-2">
+              <TableCell className="flex gap-2 justify-center">
                 <Button variant="outline" size="icon">
                   <Pencil />
                 </Button>

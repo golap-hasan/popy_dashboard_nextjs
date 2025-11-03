@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Categories from "@/components/main-route/management/categpries/Categories";
+import Categories from "@/components/main-route/management/categories/Categories";
 
 export const metadata: Metadata = {
     title: "Categories Management",

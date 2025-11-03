@@ -27,7 +27,7 @@ const UsersTable = ({ data, page, limit, onBlock }: any) => {
                             <TableHead>Phone Number</TableHead>
                             <TableHead>Company ID</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Action</TableHead>
+                            <TableHead className="text-center">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -56,7 +56,7 @@ const UsersTable = ({ data, page, limit, onBlock }: any) => {
                                         {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                                     </Badge>
                                 </TableCell>
-                                <TableCell className="text-right space-x-2">
+                                <TableCell className="text-center">
                                     <Button
                                         onClick={() => onBlock(user._id)}
                                         variant="outline" size="icon"
