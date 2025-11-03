@@ -1,20 +1,24 @@
 "use client";
+
+import { useState } from "react";
+import { Plus, Search } from "lucide-react";
 import Title from "@/components/ui/Title";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import PageLayout from "@/layout/PageLayout";
+import CustomPagination from "@/common/CustomPagination";
 import TableSkeleton from "@/components/skeleton/TableSkeleton";
-import { Search } from "lucide-react";
 import NoData from "@/common/NoData";
 import Error from "@/common/Error";
-import { books } from "./bookData";
-import BookTable from "@/components/main-route/management/books/BookTable";
-import CustomPagination from "@/common/CustomPagination";
+import { categories, categories as seedCategories } from "./categoryData";
+import CategoryTable from "./CategoryTable";
+import PageLayout from "@/layout/PageLayout";
+import { Button } from "@/components/ui/button";
+import AddCategoryModal from "./AddCategoryModal";
 
 const PAGE_LIMIT = 10;
 
-const Books = () => {
+const Categories = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const searchTerm = "";
   const totalPages = 2;
   const currentPage = 1;
@@ -22,6 +26,10 @@ const Books = () => {
   const setCurrentPage = () => {};
   const isLoading = false;
   const isError = false;
+
+  const handleAddCategory = (values: any) => {
+    console.log(values);
+  };
 
   return (
     <PageLayout
@@ -37,9 +45,9 @@ const Books = () => {
         )
       }
     >
-      <div className="flex flex-col gap-3 md:flex-row md:items-start justify-between mb-4">
+      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div className="flex items-center gap-4">
-          <Title title="BOOKS MANAGEMENT" length={books.length} />
+          <Title title="CATEGORIES MANAGEMENT" length={categories.length} />
         </div>
         <div className="flex items-center gap-4">
           <div className="relative w-full md:w-auto">
@@ -51,23 +59,31 @@ const Books = () => {
               onChange={setSearchTerm}
             />
           </div>
-          <Link href="/management/books/add">
-            <Button>Add Book</Button>
-          </Link>
+            <Button onClick={()=>setIsModalOpen(true)}>Add Book</Button>
         </div>
       </div>
 
       {isLoading ? (
         <TableSkeleton rows={10} />
       ) : isError ? (
-        <Error msg="Failed to load books." />
-      ) : books.length > 0 ? (
-        <BookTable data={books} page={currentPage} limit={PAGE_LIMIT} />
+        <Error msg="Failed to load categories." />
+      ) : categories.length > 0 ? (
+        <CategoryTable
+          data={categories}
+          page={currentPage}
+          limit={PAGE_LIMIT}
+        />
       ) : (
-        <NoData msg="No books found." />
+        <NoData msg="No categories found." />
       )}
+
+      <AddCategoryModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onSuccess={handleAddCategory}
+      />
     </PageLayout>
   );
 };
 
-export default Books;
+export default Categories;
