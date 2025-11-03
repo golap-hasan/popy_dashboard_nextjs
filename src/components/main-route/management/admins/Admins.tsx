@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus, Search } from "lucide-react";
 import Title from "@/components/ui/Title";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import AdminTable from "./Admintable";
 import { admins as seedAdmins } from "./adminData";
 import { Button } from "@/components/ui/button";
 import AddAdminModal from "./AddAdminModal";
+import { useRouter } from "next/navigation";
 
 const PAGE_LIMIT = 10;
 
@@ -39,11 +40,13 @@ const Admins = () => {
 
   const totalPages = Math.max(1, Math.ceil(filteredAdmins.length / PAGE_LIMIT));
 
+  const router = useRouter();
+
   useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
+    if (currentPage > totalPages && totalPages > 0) {
+      router.push(`?page=${totalPages}`);
     }
-  }, [currentPage, totalPages]);
+  }, [currentPage, totalPages, router]);
 
   const paginatedAdmins = useMemo(() => {
     const start = (currentPage - 1) * PAGE_LIMIT;
@@ -71,7 +74,7 @@ const Admins = () => {
   };
 
   return (
-    <Suspense fallback={<TableSkeleton rows={10} />}>
+    <>
       <PageLayout
         pagination={
           filteredAdmins.length > PAGE_LIMIT && (
@@ -112,7 +115,11 @@ const Admins = () => {
         ) : isError ? (
           <Error msg="Failed to load admins." />
         ) : filteredAdmins.length > 0 ? (
-          <AdminTable data={paginatedAdmins} page={currentPage} limit={PAGE_LIMIT} />
+          <AdminTable
+            data={paginatedAdmins}
+            page={currentPage}
+            limit={PAGE_LIMIT}
+          />
         ) : (
           <NoData msg="No admins found." />
         )}
@@ -123,9 +130,8 @@ const Admins = () => {
         onOpenChange={setIsModalOpen}
         onSuccess={handleAddAdmin}
       />
-    </Suspense>
+    </>
   );
 };
 
 export default Admins;
-
