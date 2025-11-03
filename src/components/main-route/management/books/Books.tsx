@@ -1,5 +1,7 @@
 "use client"
 import Title from "@/components/ui/Title";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import PageLayout from "@/layout/PageLayout";
 import TableSkeleton from "@/components/skeleton/TableSkeleton";
@@ -36,8 +38,11 @@ const Books = () => {
       }
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-start justify-between mb-4">
-        <Title title="BOOKS MANAGEMENT" length={books.length} />
-        <div className="relative w-full md:w-auto">
+                <div className="flex items-center gap-4">
+          <Title title="BOOKS MANAGEMENT" length={books.length} />
+        </div>
+                <div className="flex items-center gap-4">
+          <div className="relative w-full md:w-auto">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search books or authors..."
@@ -45,6 +50,10 @@ const Books = () => {
             value={searchTerm}
             onChange={setSearchTerm}
           />
+          </div>
+          <Link href="/management/books/add">
+            <Button>Add Book</Button>
+          </Link>
         </div>
       </div>
 
