@@ -73,7 +73,7 @@ const Terms = () => {
         "fullsize",
       ],
       style: {
-        background: currentTheme === "dark" ? "#0f172a" : "#ffffff",
+        background: currentTheme === "dark" ? "#2a0f0fce" : "#ffffff",
         color: currentTheme === "dark" ? "#e2e8f0" : "#0f172a",
       },
     };

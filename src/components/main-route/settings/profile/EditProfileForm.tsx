@@ -120,7 +120,7 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
                   <div className="h-6 w-6 rounded-full border grid place-items-center bg-primary/10 text-primary">
                     <User2 size={14} />
                   </div>
-                  <h3 className="text-sm font-semibold">edit.personal_info</h3>
+                  <h3 className="text-sm font-semibold">Personal information</h3>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   <FormField
@@ -128,9 +128,9 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>edit.user_name</FormLabel>
+                        <FormLabel>User name</FormLabel>
                         <FormControl>
-                          <Input placeholder={'edit.user_name_placeholder'} {...field} />
+                          <Input placeholder="User name placeholder" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -139,7 +139,7 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
                   {pendingImage && (
                     <div className="text-xs rounded border px-3 py-2 bg-amber-500/20 text-muted-foreground">
                       {'edit.pending_image_notice'}
-                      <button type="button" className="ml-2 underline" onClick={() => onClearPending?.()}>{'edit.clear'}</button>
+                      <button type="button" className="ml-2 underline" onClick={() => onClearPending?.()}>Clear</button>
                     </div>
                   )}
                 </div>
@@ -153,14 +153,14 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
                   <div className="h-6 w-6 rounded-full border grid place-items-center bg-primary/10 text-primary">
                     <Lock size={14} />
                   </div>
-                  <h3 className="text-sm font-semibold">edit.email_address</h3>
+                  <h3 className="text-sm font-semibold">Email address</h3>
                 </div>
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>edit.email_label</FormLabel>
+                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input disabled {...field} />
@@ -181,7 +181,7 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
                   <div className="h-6 w-6 rounded-full border grid place-items-center bg-primary/10 text-primary">
                     <ShieldCheck size={14} />
                   </div>
-                  <h3 className="text-sm font-semibold">edit.contact_info</h3>
+                  <h3 className="text-sm font-semibold">Contact information</h3>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   <FormField
@@ -189,9 +189,9 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>edit.contact_number</FormLabel>
+                        <FormLabel>Contact number</FormLabel>
                         <FormControl>
-                          <Input type="tel" placeholder={'edit.contact_number_placeholder'} {...field} />
+                          <Input type="tel" placeholder="Contact number placeholder" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -202,9 +202,9 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
                     name="address"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>edit.street_address</FormLabel>
+                        <FormLabel>Street address</FormLabel>
                         <FormControl>
-                          <Input placeholder={'edit.street_address_placeholder'} {...field} />
+                          <Input placeholder="Street address placeholder" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -215,7 +215,7 @@ const EditProfileForm = ({ pendingImage, onClearPending, isLoading, isError }: a
 
               <div className="pt-2">
                 <Button className="w-full" type="submit">
-                  save_changes
+                  Save changes
                 </Button>
               </div>
             </form>

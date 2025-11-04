@@ -21,8 +21,8 @@ const eslintConfig = defineConfig([
       "object-curly-spacing": ["warn", "always"],
       "array-bracket-spacing": ["warn", "never"],
       "comma-spacing": ["warn", { "before": false, "after": true }],
-      "semi": ["warn", "always"],
-      "quotes": ["warn", "double"],
+      // "semi": ["warn", "always"],
+      // "quotes": ["warn", "double"],
       "indent": ["warn", 2, { "SwitchCase": 1 }],
     }
   },
