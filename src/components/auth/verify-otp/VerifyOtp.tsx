@@ -10,14 +10,9 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
-import {
-  useResendResetOTPMutation,
-  useVerifyOTPForResetPasswordMutation,
-} from "@/redux/feature/auth/authApi";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
+import { useResendResetOTPMutation, useVerifyOTPForResetPasswordMutation } from "@/redux/feature/auth/authApi";
 
 const verificationSchema = z.object({
   code: z.string().min(6, {
@@ -26,7 +21,7 @@ const verificationSchema = z.object({
 });
 
 const VerifyOtp = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -50,7 +45,7 @@ const VerifyOtp = () => {
 
   const FPE =
     typeof window !== "undefined" ? localStorage.getItem("FPE") : null;
-  const onSubmit = (data) => {
+  const onSubmit = (data: z.infer<typeof verificationSchema>) => {
     const OTP = data.code;
     verifyOTPForResetPassword({ code: OTP, email: FPE });
   };
@@ -62,9 +57,9 @@ const VerifyOtp = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/auth/reset-password");
+      router.push("/auth/reset-password");
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, router]);
 
   useEffect(() => {
     setCooldown(60);
@@ -87,9 +82,6 @@ const VerifyOtp = () => {
       <Card className="overflow-hidden p-0">
         <CardContent className="p-0">
           <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
-            <Link to="/auth/forgot-password">
-              <ArrowLeft className="cursor-pointer" />
-            </Link>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-semibold text-title mb-2">
