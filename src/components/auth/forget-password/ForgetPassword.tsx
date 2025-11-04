@@ -6,17 +6,16 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
 import { useForgetPasswordMutation } from "@/redux/feature/auth/authApi";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
 });
 
 const ForgetPassword = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -31,11 +30,11 @@ const ForgetPassword = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/auth/verify-otp");
+      router.push("/auth/verify-otp");
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, router]);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: z.infer<typeof forgotPasswordSchema>) => {
     forgetPassword(data);
   };
 
@@ -44,9 +43,6 @@ const ForgetPassword = () => {
       <Card className="overflow-hidden p-0">
         <CardContent className="p-0">
           <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
-            <Link to="/auth/login">
-              <ArrowLeft className="cursor-pointer" />
-            </Link>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-semibold text-title mb-2">
