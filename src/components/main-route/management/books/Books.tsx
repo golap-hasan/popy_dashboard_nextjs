@@ -8,38 +8,37 @@ import TableSkeleton from "@/components/skeleton/TableSkeleton";
 import { Search } from "lucide-react";
 import NoData from "@/common/NoData";
 import Error from "@/common/Error";
-import { books } from "./bookData";
 import BookTable from "@/components/main-route/management/books/BookTable";
 import CustomPagination from "@/common/CustomPagination";
-
-const PAGE_LIMIT = 10;
+import useSmartFetchHook from "@/hooks/useSmartFetchHook";
+import { useGetAllBookQuery } from "@/redux/feature/book/bookApi";
+import { Book, BookQueryParams } from "@/redux/feature/book/book.type";
 
 const Books = () => {
-  const searchTerm = "";
-  const totalPages = 2;
-  const currentPage = 1;
-  const setSearchTerm = () => {};
-  const setCurrentPage = () => {};
-  const isLoading = false;
-  const isError = false;
+  const {
+    searchTerm,
+    setSearchTerm,
+    currentPage,
+    setCurrentPage,
+    data, // Book[]
+    meta, // { page, limit, total, totalPage }
+    isLoading,
+    isError,
+  } = useSmartFetchHook<BookQueryParams, Book>(useGetAllBookQuery, {});
 
   return (
     <PageLayout
       pagination={
-        totalPages > 1 && (
-          <div className="mt-4">
-            <CustomPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-        )
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={meta?.totalPage ?? 1}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       }
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-start justify-between mb-4">
         <div className="flex items-center gap-4">
-          <Title title="BOOKS MANAGEMENT" length={books.length} />
+          <Title title="BOOKS MANAGEMENT" length={meta?.total} />
         </div>
         <div className="flex items-center gap-4">
           <div className="relative w-full md:w-auto">
@@ -48,7 +47,7 @@ const Books = () => {
               placeholder="Search books or authors..."
               className="pl-10 w-full md:w-64"
               value={searchTerm}
-              onChange={setSearchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <Link href="/management/books/add">
@@ -61,8 +60,8 @@ const Books = () => {
         <TableSkeleton rows={10} />
       ) : isError ? (
         <Error msg="Failed to load books." />
-      ) : books.length > 0 ? (
-        <BookTable data={books} page={currentPage} limit={PAGE_LIMIT} />
+      ) : data?.length > 0 ? (
+        <BookTable data={data} page={currentPage} limit={meta?.limit ?? 10} />
       ) : (
         <NoData msg="No books found." />
       )}
