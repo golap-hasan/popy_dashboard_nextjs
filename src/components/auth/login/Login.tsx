@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,9 @@ import { useLoginMutation } from "@/redux/feature/auth/authApi";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters." }),
 });
 
 const LoginForm = () => {
@@ -31,7 +33,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof loginSchema>) => {
-    login(data)
+    login(data);
   };
 
   return (
@@ -44,7 +46,9 @@ const LoginForm = () => {
             </Link>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-semibold text-title">Welcome back</h1>
+                <h1 className="text-2xl font-semibold text-title">
+                  Welcome back
+                </h1>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -55,7 +59,9 @@ const LoginForm = () => {
                   {...register("email")}
                 />
                 {errors.email && (
-                  <span className="text-red-400 text-sm ml-0.5 -mt-1">{errors.email.message}</span>
+                  <span className="text-red-400 text-sm ml-0.5 -mt-1">
+                    {errors.email.message}
+                  </span>
                 )}
               </div>
 
@@ -66,7 +72,7 @@ const LoginForm = () => {
                     href="/auth/forget-password"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
-                                        Forgot your password?
+                    Forgot your password?
                   </Link>
                 </div>
                 <div className="relative">
@@ -85,25 +91,21 @@ const LoginForm = () => {
                   </button>
                 </div>
                 {errors.password && (
-                  <span className="text-red-400 text-sm ml-0.5 -mt-1">{errors.password.message}</span>
+                  <span className="text-red-400 text-sm ml-0.5 -mt-1">
+                    {errors.password.message}
+                  </span>
                 )}
               </div>
 
               <Button loading={isLoading} type="submit" className="w-full">
-                                Login
+                Login
               </Button>
             </div>
-            {/* <div className="text-center text-sm mt-6">
-                                Don&apos;t have an account?{" "}
-                                <Link href="/auth/sign-up" className="text-primary">
-                                    Sign up
-                                </Link>
-                            </div> */}
           </form>
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};
 
 export default LoginForm;

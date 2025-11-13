@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForgetPasswordMutation } from "@/redux/feature/auth/authApi";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const forgotPasswordSchema = z.object({
@@ -25,17 +24,15 @@ const ForgetPassword = () => {
     mode: "onChange",
   });
 
-  const [forgetPassword, { isSuccess, isLoading }] =
-    useForgetPasswordMutation();
+  const [forgetPassword, { isLoading }] = useForgetPasswordMutation();
 
-  useEffect(() => {
-    if (isSuccess) {
+  const onSubmit = async (data: z.infer<typeof forgotPasswordSchema>) => {
+    try {
+      await forgetPassword(data).unwrap();
       router.push("/auth/verify-otp");
+    } catch {
+      // handled by RTK mutation error handlers
     }
-  }, [isSuccess, router]);
-
-  const onSubmit = (data: z.infer<typeof forgotPasswordSchema>) => {
-    forgetPassword(data);
   };
 
   return (

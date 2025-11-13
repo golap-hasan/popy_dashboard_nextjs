@@ -34,42 +34,33 @@ const VerifyOtp = () => {
     },
   });
 
-  const [verifyOTPForResetPassword, { isLoading, isSuccess }] =
+  const [verifyOTPForResetPassword, { isLoading }] =
     useVerifyOTPForResetPasswordMutation();
-  const [
-    resendResetOTP,
-    { isLoading: isResendLoading, isSuccess: isResendSuccess },
-  ] = useResendResetOTPMutation();
+  const [resendResetOTP, { isLoading: isResendLoading }] =
+    useResendResetOTPMutation();
 
   const [cooldown, setCooldown] = useState(0);
 
-  const FPE =
-    typeof window !== "undefined" ? localStorage.getItem("FPE") : null;
-  const onSubmit = (data: z.infer<typeof verificationSchema>) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("FPT") : null;
+  const onSubmit = async (data: z.infer<typeof verificationSchema>) => {
     const OTP = data.code;
-    verifyOTPForResetPassword({ code: OTP, email: FPE });
-  };
-
-  const handleResendOTP = () => {
-    if (cooldown > 0) return;
-    resendResetOTP({ email: FPE });
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
+    try {
+      await verifyOTPForResetPassword({ token, otp: OTP }).unwrap();
       router.push("/auth/reset-password");
+    } catch {
+      // handled by RTK mutation error handlers
     }
-  }, [isSuccess, router]);
+  };
 
-  useEffect(() => {
-    setCooldown(60);
-  }, []);
-
-  useEffect(() => {
-    if (isResendSuccess) {
+  const handleResendOTP = async () => {
+    if (cooldown > 0) return;
+    try {
+      await resendResetOTP({ token }).unwrap();
       setCooldown(60);
+    } catch {
+      // handled by RTK mutation error handlers
     }
-  }, [isResendSuccess]);
+  };
 
   useEffect(() => {
     if (cooldown <= 0) return;

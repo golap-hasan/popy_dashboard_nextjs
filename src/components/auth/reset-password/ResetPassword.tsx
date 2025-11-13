@@ -33,8 +33,7 @@ const ResetPassword = () => {
     setShowNewPassword(!showNewPassword);
   const toggleConfirmNewPasswordVisibility = () =>
     setShowConfirmNewPassword(!showConfirmNewPassword);
-  const FPE =
-    typeof window !== "undefined" ? localStorage.getItem("FPE") : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("FPT") : null;
 
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
@@ -49,9 +48,8 @@ const ResetPassword = () => {
 
   const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
     resetPassword({
-      email: FPE,
-      newPassword: data.newPassword,
-      confirmPassword: data.confirmNewPassword,
+      resetPasswordToken: token,
+      newPassword: data.newPassword
     });
   };
 
