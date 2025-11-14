@@ -11,9 +11,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { getInitials } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
 import { Order } from "@/redux/feature/order/order.type";
+import OrderViewModal from "./OrderViewModal";
 
 const paymentVariant = (status: string) => {
   switch (status.toLowerCase()) {
@@ -104,13 +103,7 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
                   </Badge>
                 </TableCell>
                 <TableCell className="flex gap-2 justify-center">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    // onClick={() => onView(order)}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
+                  <OrderViewModal order={order} />
                 </TableCell>
               </TableRow>
             );
