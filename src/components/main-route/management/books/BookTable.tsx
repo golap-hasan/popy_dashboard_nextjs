@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+// import { Eye } from "lucide-react";
 import { Pencil } from "lucide-react";
 import type { Book } from "@/redux/feature/book/book.type";
 import { getImageUrl, timeAgo } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const formatPrice = (price: number) => `৳${Number(price).toLocaleString()}`;
 
@@ -60,6 +61,7 @@ const BookTable = ({
   page: number;
   limit: number;
 }) => {
+  const router = useRouter();
   return (
     <ScrollArea className="w-[calc(100vw-32px)] overflow-hidden overflow-x-auto md:w-full rounded-xl whitespace-nowrap">
       <Table>
@@ -73,7 +75,7 @@ const BookTable = ({
             <TableHead>Rating</TableHead>
             <TableHead>Stock</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Active</TableHead>
+            {/* <TableHead>Active</TableHead> */}
             <TableHead>Created</TableHead>
             <TableHead className="text-center">Actions</TableHead>
           </TableRow>
@@ -145,20 +147,17 @@ const BookTable = ({
                   ).replaceAll("_", " ")}
                 </Badge>
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <Badge variant={book.isActive ? "success" : "destructive"}>
                   {book.isActive ? "Active" : "Inactive"}
                 </Badge>
-              </TableCell>
+              </TableCell> */}
               <TableCell>
                 {book.createdAt ? timeAgo(book.createdAt) : "-"}
               </TableCell>
               <TableCell className="flex gap-2 justify-center">
-                <Button variant="outline" size="icon">
+                <Button onClick={() => router.push(`/management/books/${book._id}`)} variant="outline" size="icon">
                   <Pencil />
-                </Button>
-                <Button variant="default" size="icon">
-                  <Eye />
                 </Button>
               </TableCell>
             </TableRow>

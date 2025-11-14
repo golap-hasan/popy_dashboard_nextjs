@@ -22,6 +22,15 @@ const bookApi = baseApi.injectEndpoints({
       providesTags: ["BOOK"],
     }),
 
+    // GET SINGLE BOOK
+    getSingleBook: builder.query({
+      query: (id) => ({
+        url: `/book/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["BOOK"],
+    }),
+
     //=================================================================================
 
     // CREATE BOOK
@@ -57,6 +66,7 @@ const bookApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllBookQuery,
+  useGetSingleBookQuery,
   useCreateBookMutation,
   useUpdateBookMutation,
   useDeleteBookMutation,

@@ -37,3 +37,23 @@ export type BookQueryParams = {
   // extend with filters as backend supports
   [k: string]: unknown;
 };
+
+export type BookUpdatePayload = {
+  title: string;
+  subtitle?: string;
+  author: string;
+  slug: string;
+  category: string;
+  quantity: number;
+  price: string;
+  originalPrice?: string;
+  rating?: number;
+  reviewsCount?: number;
+  tag?: string;
+  description: string;
+  highlights: string[];
+  aboutAuthor?: {
+    bio: string;
+    achievements: string[];
+  };
+};
