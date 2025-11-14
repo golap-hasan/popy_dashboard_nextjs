@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/theme/theme-provider";
 import ReduxProvider from "@/provider/ReduxProvider";
 import { Toaster } from "@/components/ui/sonner";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <NextTopLoader color="#d85a3b" height={2} showSpinner={false} />
         <ReduxProvider>
           <ThemeProvider
             attribute="class"
