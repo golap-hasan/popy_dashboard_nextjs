@@ -14,7 +14,7 @@ const orderApi = baseApi.injectEndpoints({
           });
         }
         return {
-          url: "/dashboard/get-all-orders",
+          url: "/order",
           method: "GET",
           params,
         };
@@ -22,16 +22,53 @@ const orderApi = baseApi.injectEndpoints({
       providesTags: ["ORDER"],
     }),
 
-    // UPDATE ORDER
-    updateOrder: builder.mutation({
-      query: ({ orderId, status }) => ({
-        url: `/dashboard/update-order-status`,
+    // GET SINGLE ORDER
+    getSingleOrder: builder.query({
+      query: (id) => ({
+        url: `/order/details/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["ORDER"],
+    }),
+
+    //====================================================================================
+
+    // UPDATE ORDER  
+    updateOrderStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/order/${id}/status`,
         method: "PATCH",
-        params: { orderId, status },
+        body: { status },
+      }),
+      invalidatesTags: ["ORDER"],
+    }),
+
+    // "paymentStatus": "Paid" //Paid and Failed
+    updateOrderPaymentStatus: builder.mutation({
+      query: ({ id, paymentStatus }) => ({
+        url: `/order/${id}/payment-status`,
+        method: "PATCH",
+        body: { paymentStatus },
+      }),
+      invalidatesTags: ["ORDER"],
+    }),
+
+    //  "deliveryStatus": "Delivered" // Cancelled
+    updateOrderDeliveryStatus: builder.mutation({
+      query: ({ id, deliveryStatus }) => ({
+        url: `/order/${id}/delivery-status`,
+        method: "PATCH",
+        body: { deliveryStatus },
       }),
       invalidatesTags: ["ORDER"],
     }),
   }),
 });
 
-export const { useGetAllOrderQuery, useUpdateOrderMutation } = orderApi;
+export const {
+  useGetAllOrderQuery,
+  useUpdateOrderStatusMutation,
+  useUpdateOrderPaymentStatusMutation,
+  useUpdateOrderDeliveryStatusMutation,
+  useGetSingleOrderQuery,
+} = orderApi;
