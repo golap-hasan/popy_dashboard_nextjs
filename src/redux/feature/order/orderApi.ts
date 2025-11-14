@@ -33,7 +33,7 @@ const orderApi = baseApi.injectEndpoints({
 
     //====================================================================================
 
-    // UPDATE ORDER  
+    // UPDATE ORDER STATUS
     updateOrderStatus: builder.mutation({
       query: ({ id, status }) => ({
         url: `/order/${id}/status`,
@@ -43,7 +43,7 @@ const orderApi = baseApi.injectEndpoints({
       invalidatesTags: ["ORDER"],
     }),
 
-    // "paymentStatus": "Paid" //Paid and Failed
+    // UPDATE ORDER PAYMENT STATUS
     updateOrderPaymentStatus: builder.mutation({
       query: ({ id, paymentStatus }) => ({
         url: `/order/${id}/payment-status`,
@@ -53,7 +53,7 @@ const orderApi = baseApi.injectEndpoints({
       invalidatesTags: ["ORDER"],
     }),
 
-    //  "deliveryStatus": "Delivered" // Cancelled
+    // UPDATE ORDER DELIVERY STATUS
     updateOrderDeliveryStatus: builder.mutation({
       query: ({ id, deliveryStatus }) => ({
         url: `/order/${id}/delivery-status`,

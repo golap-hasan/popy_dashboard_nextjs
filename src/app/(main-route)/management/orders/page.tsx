@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import Orders from '@/components/main-route/management/orders/Orders';
+import Orders from "@/components/main-route/management/orders/Orders";
 
 export const metadata: Metadata = {
-    title: "Orders Management",
-    description: "View and manage orders placed by customers.",
+  title: "Orders Management",
+  description: "View and manage orders placed by customers.",
 };
 
 const OrderPage = () => {
-    return (
-        <Orders />
-    );
+  return <Orders />;
 };
 
 export default OrderPage;

@@ -1,61 +1,90 @@
 {
-  "_id": "691380087fb197aec8dc24c8",
-  "title": "Popy and the Enchanted Forest",
-  "subtitle": "A Magical Journey Through Dreams",
-  "author": "Nusrat Jahan",
-  "slug": "popy-and-the-enchanted-forest",
-  "category": {
-    "_id": "691371273acccb0b139cba08",
-    "name": "Play Group & Nursery",
-    "slug": "play-group-nursery",
-    "createdAt": "2025-11-11T17:23:51.647Z",
-    "updatedAt": "2025-11-11T17:23:51.647Z"
-  },
-  "quantity": 120,
-  "price": 350,
-  "originalPrice": 450,
-  "rating": 4.8,
-  "reviewsCount": 35,
-  "tag": "Adventure",
-  "coverImage": "public/images/পানি-ও-আলো-একই-চিত্রে-1762885640564.png",
-  "description": "Popy and the Enchanted Forest is a delightful tale of courage, friendship, and magic. Follow Popy as she discovers the secrets of an ancient forest and learns the power of kindness.",
-  "highlights": [
-    "Beautifully illustrated full-color pages",
-    "Engaging and educational storytelling",
-    "Perfect for ages 6-12",
-    "Teaches empathy and teamwork"
-  ],
-  "specs": [
-    {
-      "label": "Language",
-      "value": "Bengali"
+    "success": true,
+    "message": "Orders retrived succesfully!",
+    "meta": {
+        "page": 1,
+        "limit": 10,
+        "total": 3,
+        "totalPage": 1
     },
-    {
-      "label": "Publisher",
-      "value": "Popy Books"
-    },
-    {
-      "label": "Page Count",
-      "value": "120"
-    },
-    {
-      "label": "ISBN",
-      "value": "978-984-1234567"
-    },
-    {
-      "label": "Format",
-      "value": "Paperback"
-    }
-  ],
-  "aboutAuthor": {
-    "bio": "Nusrat Jahan is a Bangladeshi children’s author known for her heartwarming stories that spark imagination and curiosity among young readers.",
-    "achievements": [
-      "Winner of the National Children's Literature Award 2023",
-      "Published 10+ children's storybooks",
-      "Regular contributor to Shishu Patrika magazine"
+    "data": [
+        {
+            "_id": "6913833e3cb0070cc81d509d",
+            "user": {
+                "name": "Khaled",
+                "phone": "+8801832639064",
+                "email": "temothd@gmail.com"
+            },
+            "deliveryCharge": 0,
+            "finalAmount": 17500,
+            "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
+            "paymentMethod": "COD",
+            "status": "Completed",
+            "paymentStatus": "Paid",
+            "deliveryStatus": "Delivered",
+            "books": [
+                {
+                    "quantity": 50,
+                    "unitPrice": 350,
+                    "book": {
+                        "title": "Popy and the Enchanted Forest",
+                        "coverImage": "public/images/পানি-ও-আলো-একই-চিত্রে-1762885640564.png",
+                        "slug": "popy-and-the-enchanted-forest"
+                    }
+                }
+            ]
+        },
+        {
+            "_id": "691383123cb0070cc81d5098",
+            "user": {
+                "name": "Khaled",
+                "phone": "+8801832639064",
+                "email": "temothd@gmail.com"
+            },
+            "deliveryCharge": 0,
+            "finalAmount": 17500,
+            "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
+            "paymentMethod": "COD",
+            "status": "Completed",
+            "paymentStatus": "Pending",
+            "deliveryStatus": "Processing",
+            "books": [
+                {
+                    "quantity": 50,
+                    "unitPrice": 350,
+                    "book": {
+                        "title": "Popy and the Enchanted Forest",
+                        "coverImage": "public/images/পানি-ও-আলো-একই-চিত্রে-1762885640564.png",
+                        "slug": "popy-and-the-enchanted-forest"
+                    }
+                }
+            ]
+        },
+        {
+            "_id": "691382e23cb0070cc81d5093",
+            "user": {
+                "name": "Khaled",
+                "phone": "+8801832639064",
+                "email": "temothd@gmail.com"
+            },
+            "deliveryCharge": 70,
+            "finalAmount": 770,
+            "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
+            "paymentMethod": "COD",
+            "status": "Completed",
+            "paymentStatus": "Pending",
+            "deliveryStatus": "Processing",
+            "books": [
+                {
+                    "quantity": 2,
+                    "unitPrice": 350,
+                    "book": {
+                        "title": "Popy and the Enchanted Forest",
+                        "coverImage": "public/images/পানি-ও-আলো-একই-চিত্রে-1762885640564.png",
+                        "slug": "popy-and-the-enchanted-forest"
+                    }
+                }
+            ]
+        }
     ]
-  },
-  "isActive": true,
-  "createdAt": "2025-11-11T18:27:20.850Z",
-  "updatedAt": "2025-11-11T19:56:43.831Z"
 }
