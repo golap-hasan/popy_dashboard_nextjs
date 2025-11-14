@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 // import { Eye } from "lucide-react";
 import { Pencil } from "lucide-react";
 import type { Book } from "@/redux/feature/book/book.type";
-import { getImageUrl, timeAgo } from "@/lib/utils";
+import { getImageUrl } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
 const formatPrice = (price: number) => `৳${Number(price).toLocaleString()}`;
@@ -76,7 +76,7 @@ const BookTable = ({
             <TableHead>Stock</TableHead>
             <TableHead>Status</TableHead>
             {/* <TableHead>Active</TableHead> */}
-            <TableHead>Created</TableHead>
+            {/* <TableHead>Created</TableHead> */}
             <TableHead className="text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -148,15 +148,10 @@ const BookTable = ({
                 </Badge>
               </TableCell>
               {/* <TableCell>
-                <Badge variant={book.isActive ? "success" : "destructive"}>
-                  {book.isActive ? "Active" : "Inactive"}
-                </Badge>
+                {timeAgo(book?.createdAt || "")}
               </TableCell> */}
-              <TableCell>
-                {book.createdAt ? timeAgo(book.createdAt) : "-"}
-              </TableCell>
               <TableCell className="flex gap-2 justify-center">
-                <Button onClick={() => router.push(`/management/books/${book._id}`)} variant="outline" size="icon">
+                <Button onClick={() => router.push(`/management/books/${book?._id}/${book?.slug}`)} variant="outline" size="icon">
                   <Pencil />
                 </Button>
               </TableCell>

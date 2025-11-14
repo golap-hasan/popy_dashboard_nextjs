@@ -2,8 +2,8 @@ import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery 
 import type { RootState } from "@/redux/store";
 import { setAccessToken, setAdmin } from "./auth/authSlice";
 
-// export const baseUrl = "https://popy-book-apis.vercel.app/api/v1";
-export const baseUrl = "http://10.10.20.41:6021/api/v1";
+export const baseUrl = "https://popy-book-apis.vercel.app/api/v1";
+// export const baseUrl = "http://10.10.20.41:6021/api/v1";
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: baseUrl,

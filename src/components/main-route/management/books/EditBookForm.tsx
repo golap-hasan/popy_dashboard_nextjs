@@ -42,10 +42,11 @@ import { ErrorToast, SuccessToast } from "@/lib/utils";
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 type EditBookFormProps = {
+  slug: string;
   id: string;
 };
 
-const EditBookForm = ({ id }: EditBookFormProps) => {
+const EditBookForm = ({ slug, id }: EditBookFormProps) => {
   const router = useRouter();
   const { theme } = useTheme();
   const [pendingImage, setPendingImage] = useState<File | null>(null);
@@ -76,7 +77,7 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
     },
   });
 
-  const { data, isLoading, isError } = useGetSingleBookQuery(id);
+  const { data, isLoading, isError } = useGetSingleBookQuery(slug);
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
 
   const book: Book | undefined = (data as { data?: Book } | undefined)?.data;

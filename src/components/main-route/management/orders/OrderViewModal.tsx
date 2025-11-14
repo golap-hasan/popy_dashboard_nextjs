@@ -32,7 +32,7 @@ const OrderViewModal = ({ order }: { order: Order }) => {
   };
 
   const deliveryVariant = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "delivered":
         return "success";
       case "processing":
@@ -152,21 +152,21 @@ const OrderViewModal = ({ order }: { order: Order }) => {
                     </h3>
                     <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center">
                       <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border self-center sm:self-start">
-                        <AvatarImage src="" alt={order.user.name} />
+                        <AvatarImage src="" alt={order.user?.name} />
                         <AvatarFallback className="text-sm sm:text-lg font-semibold">
-                          {getInitials(order.user.name)}
+                          {getInitials(order.user?.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 space-y-2 text-center sm:text-left">
-                        <p className="text-sm sm:text-base font-semibold">{order.user.name}</p>
+                        <p className="text-sm sm:text-base font-semibold">{order.user?.name}</p>
                         <div className="grid gap-2 text-[10px] sm:text-xs md:text-sm grid-cols-1 sm:grid-cols-2">
                           <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 text-muted-foreground">
                             <Mail className="h-3 w-3 sm:h-4 sm:w-4" />
-                            <span className="truncate">{order.user.email}</span>
+                            <span className="truncate">{order.user?.email}</span>
                           </div>
                           <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 text-muted-foreground">
                             <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
-                            <span>{order.user.phone}</span>
+                            <span>{order.user?.phone}</span>
                           </div>
                         </div>
                       </div>
@@ -182,19 +182,19 @@ const OrderViewModal = ({ order }: { order: Order }) => {
                         </span>
                         Ordered books
                       </span>
-                      <span className="text-[10px] sm:text-xs text-muted-foreground">{order.books.length} item{order.books.length > 1 ? "s" : ""}</span>
+                      <span className="text-[10px] sm:text-xs text-muted-foreground">{order.books?.length} item{order.books?.length > 1 ? "s" : ""}</span>
                     </h3>
 
                     <div className="space-y-2 sm:space-y-3">
-                      {order.books.map((bookItem, index) => (
+                      {order.books?.map((bookItem, index) => (
                         <div
                           key={index}
                           className="flex items-center gap-3 sm:gap-4 rounded-lg sm:rounded-xl border bg-muted/40 p-2.5 sm:p-3 md:p-4"
                         >
                           <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border bg-background shrink-0">
                             <AvatarImage
-                              src={bookItem.book.coverImage}
-                              alt={bookItem.book.title}
+                              src={bookItem?.book?.coverImage}
+                              alt={bookItem?.book?.title}
                             />
                             <AvatarFallback className="text-xs sm:text-sm">📖</AvatarFallback>
                           </Avatar>
@@ -245,16 +245,14 @@ const OrderViewModal = ({ order }: { order: Order }) => {
                     <div className="space-y-2 sm:space-y-3 text-[11px] sm:text-sm">
                       <div className="flex items-center justify-between">
                         <span className="text-muted-foreground">
-                          Subtotal ({order.books.length} book{order.books.length > 1 ? "s" : ""})
+                          Subtotal ({order.books?.length} book{order.books?.length > 1 ? "s" : ""})
                         </span>
                         <span className="font-semibold">
                           ৳
-                          {order.books
-                            .reduce(
+                          {order.books?.reduce(
                               (sum, book) => sum + book.unitPrice * book.quantity,
                               0
-                            )
-                            .toLocaleString()}
+                            )?.toLocaleString()}
                         </span>
                       </div>
 
@@ -272,7 +270,7 @@ const OrderViewModal = ({ order }: { order: Order }) => {
                       <div className="flex items-center justify-between rounded-lg sm:rounded-xl bg-primary/5 px-2 sm:px-3 py-2 sm:py-3">
                         <span className="text-xs sm:text-sm font-semibold">Total amount</span>
                         <span className="text-sm sm:text-lg font-bold text-primary">
-                          ৳{order.finalAmount.toLocaleString()}
+                          ৳{order.finalAmount?.toLocaleString()}
                         </span>
                       </div>
                     </div>

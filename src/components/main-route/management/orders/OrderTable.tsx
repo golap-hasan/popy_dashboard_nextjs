@@ -77,8 +77,8 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
           </TableHeader>
           <TableBody>
             {data?.map((order: Order, index: number) => {
-              const totalQuantity = order.books.reduce((sum, book) => sum + book.quantity, 0);
-              const totalAmount = order.finalAmount;
+              const totalQuantity = order?.books?.reduce((sum, book) => sum + book.quantity, 0);
+              const totalAmount = order?.finalAmount;
 
               return (
                 <TableRow key={order._id}>
@@ -86,32 +86,32 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="border w-10 h-10">
-                        <AvatarImage src="" alt={order.user.name} />
-                        <AvatarFallback>{getInitials(order.user.name)}</AvatarFallback>
+                        <AvatarImage src="" alt={order?.user?.name} />
+                        <AvatarFallback>{getInitials(order?.user?.name)}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <span className="font-medium whitespace-nowrap">{order.user.name}</span>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{order.user.email}</span>
+                        <span className="font-medium whitespace-nowrap">{order?.user?.name}</span>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{order?.user?.email}</span>
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="min-w-[220px]">
                     <div className="flex flex-col gap-1">
-                      {order.books.map((bookItem, bookIndex) => (
+                      {order?.books?.map((bookItem, bookIndex) => (
                         <div key={bookIndex} className="flex flex-col">
-                          <span className="font-medium text-sm">{bookItem.book.title}</span>
+                          <span className="font-medium text-sm">{bookItem?.book?.title}</span>
                           <span className="text-xs text-muted-foreground">
-                            ৳{bookItem.unitPrice} × {bookItem.quantity}
+                            ৳{bookItem?.unitPrice} × {bookItem?.quantity}
                           </span>
                         </div>
                       ))}
                     </div>
                   </TableCell>
                   <TableCell>{totalQuantity}</TableCell>
-                  <TableCell>৳{totalAmount.toLocaleString()}</TableCell>
+                  <TableCell>৳{totalAmount?.toLocaleString()}</TableCell>
                   <TableCell>
                     <Select
-                      value={order.status}
+                      value={order?.status}
                       onValueChange={(value) => handleStatusChange(order._id, 'status', value)}
                     >
                       <SelectTrigger className="w-fit border-0 bg-transparent shadow-none focus:ring-0 focus:ring-offset-0">
@@ -126,7 +126,7 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
                   </TableCell>
                   <TableCell>
                     <Select
-                      value={order.paymentStatus}
+                      value={order?.paymentStatus}
                       onValueChange={(value) => handleStatusChange(order._id, 'paymentStatus', value)}
                     >
                       <SelectTrigger className="w-fit border-0 bg-transparent shadow-none focus:ring-0 focus:ring-offset-0">
@@ -141,7 +141,7 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
                   </TableCell>
                   <TableCell>
                     <Select
-                      value={order.deliveryStatus}
+                      value={order?.deliveryStatus}
                       onValueChange={(value) => handleStatusChange(order._id, 'deliveryStatus', value)}
                     >
                       <SelectTrigger className="w-fit border-0 bg-transparent shadow-none focus:ring-0 focus:ring-offset-0">
