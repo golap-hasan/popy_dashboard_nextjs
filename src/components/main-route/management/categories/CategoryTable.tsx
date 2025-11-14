@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { useDeleteCategoryMutation } from "@/redux/feature/category/categoryApi";
 import { SuccessToast, ErrorToast } from "@/lib/utils";
+import { Loader } from "lucide-react";
 
 const CategoryTable = ({
   data,
@@ -35,7 +36,7 @@ const CategoryTable = ({
   page: number;
   limit: number;
 }) => {
-  const [deleteCategory] = useDeleteCategoryMutation();
+  const [deleteCategory, { isLoading }] = useDeleteCategoryMutation();
 
   const handleDeleteCategory = async (id: string) => {
     try {
@@ -47,7 +48,15 @@ const CategoryTable = ({
   };
 
   return (
-    <ScrollArea className="w-[calc(100vw-32px)] overflow-hidden overflow-x-auto md:w-full rounded-xl whitespace-nowrap">
+    <div className="relative">
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-black/30 z-10 flex items-center justify-center rounded-xl">
+          <Loader className="h-8 w-8 animate-spin text-white" />
+        </div>
+      )}
+
+      <ScrollArea className="w-[calc(100vw-32px)] overflow-hidden overflow-x-auto md:w-full rounded-xl whitespace-nowrap">
       <Table>
         <TableHeader>
           <TableRow>
@@ -101,6 +110,7 @@ const CategoryTable = ({
         </TableBody>
       </Table>
     </ScrollArea>
+    </div>
   );
 };
 

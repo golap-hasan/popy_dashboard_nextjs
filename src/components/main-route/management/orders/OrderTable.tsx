@@ -55,7 +55,7 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
     <div className="relative">
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 bg-black/50 z-10 flex items-center justify-center rounded-xl">
+        <div className="absolute inset-0 bg-black/30 z-10 flex items-center justify-center rounded-xl">
           <Loader className="h-8 w-8 animate-spin text-white" />
         </div>
       )}
