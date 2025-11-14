@@ -18,6 +18,7 @@ export const bookFormSchema = z.object({
   tag: z.string().optional(),
   description: z.string().optional(),
   highlights: z.string().optional(),
+  specs: z.string().optional(),
   aboutAuthorBio: z.string().optional(),
   aboutAuthorAchievements: z.string().optional(),
 });

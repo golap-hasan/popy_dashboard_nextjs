@@ -52,6 +52,7 @@ export type BookUpdatePayload = {
   tag?: string;
   description: string;
   highlights: string[];
+  specs?: BookSpec[];
   aboutAuthor?: {
     bio: string;
     achievements: string[];

@@ -14,135 +14,92 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import PageLayout from "@/layout/PageLayout";
 import Title from "@/components/ui/Title";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Sparkles, X } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import {
+  useCreateBookMutation,
+} from "@/redux/feature/book/bookApi";
+import { bookFormSchema } from "./book.schema";
+import { BookUpdatePayload } from "@/redux/feature/book/book.type";
+import { ErrorToast, SuccessToast } from "@/lib/utils";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
-const MAX_IMAGES = 5;
-
-const fileSchema = z
-  .custom<File>((file) => file instanceof File, {
-    message: "Please upload a valid image file.",
-  })
-  .refine((file) => file.size <= 5 * 1024 * 1024, {
-    message: "Each image must be 5MB or less.",
-  });
-
-const formSchema = z.object({
-  title: z.string().min(2, { message: "Title must be at least 2 characters." }),
-  subtitle: z.string().optional(),
-  author: z.string().min(2, { message: "Author must be at least 2 characters." }),
-  price: z.string().min(1, { message: "Price is required." }),
-  originalPrice: z.string().optional(),
-  tag: z.string().min(2, { message: "Tag must be at least 2 characters." }),
-  coverImages: z
-    .array(fileSchema)
-    .min(1, { message: "At least one cover image is required." })
-    .max(MAX_IMAGES, { message: `You can upload up to ${MAX_IMAGES} images.` }),
-  description: z.string().min(10, { message: "Description must be at least 10 characters." }),
-  highlights: z.string().min(10, { message: "Highlights must be at least 10 characters." }),
-  specs: z.string().optional(), // For simplicity, accepting JSON string
-});
-
 const AddBookForm = () => {
+  const router = useRouter();
+  const { theme } = useTheme();
+  const [pendingImage, setPendingImage] = useState<File | null>(null);
+  const [highlights, setHighlights] = useState<string[]>([]);
+  const [currentHighlight, setCurrentHighlight] = useState("");
+
+  const formSchema = bookFormSchema;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       subtitle: "",
       author: "",
+      slug: "",
+      category: "",
+      quantity: "",
       price: "",
       originalPrice: "",
+      rating: "",
+      reviewsCount: "",
       tag: "",
-      coverImages: [],
       description: "",
       highlights: "",
       specs: "",
+      aboutAuthorBio: "",
+      aboutAuthorAchievements: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: Handle form submission
-    console.log(values);
-  }
+  const [createBook, { isLoading: isCreating }] = useCreateBookMutation();
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [previews, setPreviews] = useState<string[]>([]);
-  const coverImages = form.watch("coverImages");
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const addHighlight = () => {
+    if (currentHighlight.trim()) {
+      setHighlights([...highlights, currentHighlight.trim()]);
+      setCurrentHighlight("");
+    }
+  };
 
-  useEffect(() => {
-    if (!coverImages?.length) {
-      setPreviews([]);
-      return;
+  const removeHighlight = (index: number) => {
+    setHighlights(highlights.filter((_, i) => i !== index));
+  };
+
+  const handleHighlightKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addHighlight();
+    }
+  };
+
+  const config = useMemo(() => {
+    let currentTheme = theme;
+    if (theme === "system") {
+      currentTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
     }
 
-    const objectUrls = coverImages.map((file) => URL.createObjectURL(file));
-    setPreviews(objectUrls);
-
-    return () => {
-      objectUrls.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [coverImages]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const root = document.documentElement;
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const updateTheme = () => {
-      const hasDarkClass = root.classList.contains("dark");
-      const hasLightClass = root.classList.contains("light");
-
-      if (hasDarkClass) {
-        setIsDarkMode(true);
-        return;
-      }
-
-      if (hasLightClass) {
-        setIsDarkMode(false);
-        return;
-      }
-
-      setIsDarkMode(mediaQuery.matches);
-    };
-
-    updateTheme();
-    mediaQuery.addEventListener("change", updateTheme);
-
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-
-    return () => {
-      mediaQuery.removeEventListener("change", updateTheme);
-      observer.disconnect();
-    };
-  }, []);
-
-  const config = useMemo(
-    () => ({
+    return {
       readonly: false,
-      placeholder: "Craft engaging copy...",
+      placeholder: "Add detailed description...",
       toolbarAdaptive: false,
-      theme: isDarkMode ? "dark" : "default",
-      height: 420,
-      minHeight: 380,
+      height: 320,
+      minHeight: 280,
       askBeforePasteHTML: false,
+      theme: currentTheme,
       buttons: [
         "bold",
         "italic",
@@ -156,13 +113,74 @@ const AddBookForm = () => {
         "hr",
         "eraser",
       ],
-    }),
-    [isDarkMode]
-  );
+      style: {
+        background: currentTheme === "dark" ? "#2a0f0fce" : "#ffffff",
+        color: currentTheme === "dark" ? "#e2e8f0" : "#0f172a",
+      },
+    };
+  }, [theme]);
+
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const payload: BookUpdatePayload = {
+        title: values.title,
+        subtitle: values.subtitle || undefined,
+        author: values.author,
+        slug: values.slug,
+        category: values.category,
+        quantity: Number(values.quantity),
+        price: values.price,
+        originalPrice: values.originalPrice,
+        rating: values.rating ? Number(values.rating) : undefined,
+        reviewsCount: values.reviewsCount
+          ? Number(values.reviewsCount)
+          : undefined,
+        tag: values.tag,
+        description: values.description || "",
+        highlights: highlights, // Use the highlights state directly
+        specs: values.specs
+          ? values.specs
+            .split("\n")
+            .map((line) => {
+              const [label, ...valueParts] = line.split(":");
+              const value = valueParts.join(":").trim();
+              return { label: label.trim(), value };
+            })
+            .filter((spec) => spec.label && spec.value)
+          : undefined,
+        aboutAuthor:
+          values.aboutAuthorBio || values.aboutAuthorAchievements
+            ? {
+              bio: values.aboutAuthorBio || "",
+              achievements: values.aboutAuthorAchievements
+                ? values.aboutAuthorAchievements
+                  .split("\n")
+                  .map((a) => a.trim())
+                  .filter(Boolean)
+                : [],
+            }
+            : undefined,
+      };
+
+      const formData = new FormData();
+      formData.append("data", JSON.stringify(payload));
+
+      if (pendingImage) {
+        formData.append("file", pendingImage);
+      }
+
+      await createBook(formData).unwrap();
+      SuccessToast("Book created successfully.");
+      router.push("/management/books");
+    } catch (err) {
+      const msg = (err as { data?: { message?: string } })?.data?.message || "Failed to create book.";
+      ErrorToast(msg);
+    }
+  };
 
   return (
     <PageLayout>
-      <div className="space-y-8">
+      <div className="space-y-4">
         <Title title="Add a New Book" />
         <section className="relative overflow-hidden rounded-3xl border bg-linear-to-br from-primary/10 via-background to-background p-8 shadow-sm">
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_55%)]" />
@@ -196,7 +214,7 @@ const AddBookForm = () => {
         </section>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
             <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
               <div className="space-y-6">
                 <Card className="shadow-sm">
@@ -256,6 +274,35 @@ const AddBookForm = () => {
                       />
                       <FormField
                         control={form.control}
+                        name="slug"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Slug</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Unique slug" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Category</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Play Group & Nursery"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
                         name="price"
                         render={({ field }) => (
                           <FormItem>
@@ -282,6 +329,48 @@ const AddBookForm = () => {
                       />
                       <FormField
                         control={form.control}
+                        name="quantity"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quantity</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Available quantity"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="rating"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Rating</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g., 4.8" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="reviewsCount"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Reviews count</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g., 35" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
                         name="tag"
                         render={({ field }) => (
                           <FormItem>
@@ -294,126 +383,76 @@ const AddBookForm = () => {
                         )}
                       />
                     </div>
-                    <FormField
-                      control={form.control}
-                      name="coverImages"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Cover images</FormLabel>
-                          <FormControl>
-                            <div className="space-y-4">
-                              <input
-                                ref={(node) => {
-                                  fileInputRef.current = node;
-                                  field.ref(node);
-                                }}
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                className="hidden"
-                                onChange={(event) => {
-                                  const selectedFiles = Array.from(event.target.files ?? []);
-                                  if (!selectedFiles.length) return;
-
-                                  const existingFiles = field.value ?? [];
-                                  const availableSlots = MAX_IMAGES - existingFiles.length;
-                                  const filesToAdd = selectedFiles.slice(0, availableSlots);
-                                  field.onChange([...existingFiles, ...filesToAdd]);
-
-                                  if (fileInputRef.current) {
-                                    fileInputRef.current.value = "";
-                                  }
-                                }}
-                                onBlur={field.onBlur}
-                              />
-
-                              {previews.length > 0 && (
-                                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                                  {previews.map((previewUrl, index) => {
-                                    const file = field.value?.[index];
-                                    return (
-                                      <div
-                                        key={`${previewUrl}-${index}`}
-                                        className="overflow-hidden rounded-2xl border bg-background shadow-sm"
-                                      >
-                                        <img src={previewUrl} alt={`Cover preview ${index + 1}`} className="h-64 w-full object-cover" />
-                                        <div className="flex items-start justify-between gap-3 border-t px-4 py-3 text-sm">
-                                          <div className="space-y-1">
-                                            <p className="font-medium leading-none">
-                                              {file?.name ?? `Image ${index + 1}`}
-                                            </p>
-                                            {file && (
-                                              <p className="text-muted-foreground text-xs">
-                                                {Math.round(file.size / 1024)} KB
-                                              </p>
-                                            )}
-                                          </div>
-                                          <div className="flex gap-2">
-                                            <Button
-                                              type="button"
-                                              variant="outline"
-                                              size="icon"
-                                              onClick={() => {
-                                                const updated = [...(field.value ?? [])];
-                                                updated.splice(index, 1);
-                                                field.onChange(updated);
-                                                if (fileInputRef.current) {
-                                                  fileInputRef.current.value = "";
-                                                }
-                                              }}
-                                            >
-                                              <X />
-                                            </Button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-
-                              { (field.value?.length ?? 0) < MAX_IMAGES && (
-                                <button
-                                  type="button"
-                                  onClick={() => fileInputRef.current?.click()}
-                                  className="group relative flex min-h-[220px] w-full flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-muted-foreground/40 bg-muted/30 px-6 py-8 text-center transition hover:border-primary/60 hover:bg-primary/5"
+                    <div className="space-y-4">
+                      <FormLabel>Cover image</FormLabel>
+                      <div className="space-y-4">
+                        {pendingImage && (
+                          <div className="overflow-hidden w-52 rounded-2xl border bg-background shadow-sm">
+                            <img
+                              src={URL.createObjectURL(pendingImage)}
+                              alt="Cover preview"
+                              className="h-64 w-full object-cover"
+                            />
+                            <div className="flex items-start justify-between gap-3 border-t px-4 py-3 text-sm">
+                              <div className="space-y-1 min-w-0 flex-1">
+                                <p
+                                  className="font-medium leading-none truncate"
+                                  title={pendingImage.name}
                                 >
-                                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/20 group-hover:text-primary">
-                                    <Sparkles className="h-5 w-5" />
-                                  </div>
-                                  <div className="space-y-1">
-                                    <p className="font-medium">Drag &amp; drop or click to upload</p>
-                                    <p className="text-muted-foreground text-sm">
-                                      Add up to {MAX_IMAGES} high-resolution images to showcase the book.
-                                    </p>
-                                  </div>
-                                  <span className="text-muted-foreground text-xs">
-                                    JPG or PNG, up to 5MB each
-                                  </span>
-                                </button>
-                              )}
-
-                              {previews.length > 0 && (field.value?.length ?? 0) < MAX_IMAGES && (
-                                <div className="flex flex-wrap items-center gap-3">
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => fileInputRef.current?.click()}
-                                  >
-                                    Upload more images
-                                  </Button>
-                                </div>
-                              )}
+                                  {pendingImage.name}
+                                </p>
+                                <p className="text-muted-foreground text-xs">
+                                  {Math.round(pendingImage.size / 1024)} KB
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => setPendingImage(null)}
+                                >
+                                  <X />
+                                </Button>
+                              </div>
                             </div>
-                          </FormControl>
-                          <FormDescription>
-                            Upload between 1 and {MAX_IMAGES} images (JPG or PNG, max 5MB each). We’ll auto-optimize for the storefront.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                          </div>
+                        )}
+
+                        {!pendingImage && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const input = document.createElement('input');
+                              input.type = 'file';
+                              input.accept = 'image/*';
+                              input.onchange = (event) => {
+                                const file = (event.target as HTMLInputElement).files?.[0] || null;
+                                setPendingImage(file);
+                              };
+                              input.click();
+                            }}
+                            className="group relative flex min-h-[220px] w-auto flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-muted-foreground/40 bg-muted/30 px-6 py-8 text-center transition hover:border-primary/60 hover:bg-primary/5"
+                          >
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/20 group-hover:text-primary">
+                              <Sparkles className="h-5 w-5" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="font-medium">Upload cover image</p>
+                              <p className="text-muted-foreground text-sm">
+                                Add a high-resolution image to showcase the book.
+                              </p>
+                            </div>
+                            <span className="text-muted-foreground text-xs">
+                              JPG or PNG, up to 5MB
+                            </span>
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Optional: upload a high-resolution image to showcase the book.
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -430,29 +469,96 @@ const AddBookForm = () => {
                         <FormItem>
                           <FormLabel>Main description</FormLabel>
                           <FormControl>
-                            <Textarea
-                              rows={6}
-                              placeholder="Summarize the plot, audience, and takeaways in a compelling way."
-                              {...field}
-                            />
+                            <div className="rounded-xl border bg-background/80 p-2">
+                              <JoditEditor
+                                value={field.value || ""}
+                                config={config}
+                                onBlur={(newContent) =>
+                                  field.onChange(newContent)
+                                }
+                              />
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                    <div className="space-y-4">
+                      <FormLabel>Highlights</FormLabel>
+
+                      {/* Display existing highlights as chips */}
+                      {highlights.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {highlights.map((highlight, index) => (
+                            <Badge
+                              key={index}
+                              variant="secondary"
+                              className="flex items-center gap-1 pr-1"
+                            >
+                              {highlight}
+                              <button
+                                type="button"
+                                onClick={() => removeHighlight(index)}
+                                className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Add new highlight input */}
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Add a highlight..."
+                          value={currentHighlight}
+                          onChange={(e) => setCurrentHighlight(e.target.value)}
+                          onKeyPress={handleHighlightKeyPress}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          onClick={addHighlight}
+                          disabled={!currentHighlight.trim()}
+                        >
+                          Add
+                        </Button>
+                      </div>
+
+                      <FormDescription>
+                        Add key selling points and features. Each highlight will be displayed as a separate item.
+                      </FormDescription>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="shadow-sm">
+                  <CardHeader className="space-y-3">
+                    <CardTitle>Specifications</CardTitle>
+                    <CardDescription>
+                      Technical details and specifications for the book.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
                     <FormField
                       control={form.control}
-                      name="highlights"
+                      name="specs"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Highlights</FormLabel>
+                          <FormLabel>Book specifications</FormLabel>
                           <FormControl>
                             <Textarea
-                              rows={5}
-                              placeholder="Share bullet-style highlights, accolades, or reader benefits."
+                              rows={6}
+                              placeholder={
+                                "e.g. Language: Bengali\ne.g. Publisher: Popy Books\ne.g. Page Count: 120\ne.g. ISBN: 978-984-1234567\ne.g. Format: Paperback"
+                              }
                               {...field}
                             />
                           </FormControl>
+                          <FormDescription>
+                            Note: Enter specifications as "Label: Value" pairs, one per line. These will be parsed and sent as structured data.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -462,27 +568,49 @@ const AddBookForm = () => {
 
                 <Card className="shadow-sm">
                   <CardHeader className="space-y-3">
-                    <CardTitle>Rich content</CardTitle>
+                    <CardTitle>Description & author</CardTitle>
                     <CardDescription>
-                      Deep dive into specifications for enthusiasts and researchers.
+                      Add detailed description and author information.
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="grid gap-6">
+                  <CardContent className="space-y-6">
                     <FormField
                       control={form.control}
-                      name="specs"
+                      name="aboutAuthorBio"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Specifications</FormLabel>
+                          <FormLabel>Author bio</FormLabel>
                           <FormControl>
-                            <div className="rounded-xl border bg-background/80 p-2 shadow-inner">
-                              <JoditEditor
-                                value={field.value || ""}
-                                config={config}
-                                onBlur={(newContent) => field.onChange(newContent)}
-                              />
-                            </div>
+                            <Textarea
+                              rows={4}
+                              placeholder="Short bio about the author."
+                              {...field}
+                            />
                           </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="aboutAuthorAchievements"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Author achievements</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              rows={4}
+                              placeholder={
+                                "One achievement per line (e.g. Winner of the National Children's Literature Award 2023)"
+                              }
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Will be sent as an array of strings in the API
+                            payload.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -492,7 +620,7 @@ const AddBookForm = () => {
 
                 <Card className="shadow-sm">
                   <CardHeader>
-                    <CardTitle>Finalize &amp; publish</CardTitle>
+                    <CardTitle>Finalize & publish</CardTitle>
                     <CardDescription>
                       Double-check key details before sharing the book with your audience.
                     </CardDescription>
@@ -501,8 +629,8 @@ const AddBookForm = () => {
                     <p className="text-sm text-muted-foreground">
                       Need to gather assets later? You can save a draft and revisit at any time.
                     </p>
-                    <Button type="submit" size="lg" className="gap-2">
-                      <Sparkles className="h-4 w-4" /> Publish book
+                    <Button type="submit" size="lg" className="gap-2" disabled={isCreating}>
+                      {isCreating ? "Creating..." : "Publish book"}
                     </Button>
                   </CardFooter>
                 </Card>

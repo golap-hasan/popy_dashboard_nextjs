@@ -30,7 +30,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader, X } from "lucide-react";
+import { Loader, Sparkles, X } from "lucide-react";
 import {
   useGetSingleBookQuery,
   useUpdateBookMutation,
@@ -70,6 +70,7 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
       tag: "",
       description: "",
       highlights: "",
+      specs: "",
       aboutAuthorBio: "",
       aboutAuthorAchievements: "",
     },
@@ -78,7 +79,7 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
   const { data, isLoading, isError } = useGetSingleBookQuery(id);
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
 
-  const book: Book | undefined = (data as any)?.data;
+  const book: Book | undefined = (data as { data?: Book } | undefined)?.data;
 
   // Helper functions for highlights
   const addHighlight = () => {
@@ -102,6 +103,7 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
   // Initialize highlights when book data loads
   useEffect(() => {
     if (book?.highlights && Array.isArray(book.highlights)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHighlights(book.highlights);
     }
   }, [book?.highlights]);
@@ -130,6 +132,11 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
       tag: book.tag || "",
       description: book.description || "",
       highlights: "", // Not used anymore, using separate state
+      specs: book.specs
+        ? book.specs
+          .map((spec) => `${spec.label}: ${spec.value}`)
+          .join("\n")
+        : "",
       aboutAuthorBio: book.aboutAuthor?.bio || "",
       aboutAuthorAchievements: Array.isArray(book.aboutAuthor?.achievements)
         ? book.aboutAuthor?.achievements.join("\n")
@@ -191,6 +198,16 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
         tag: values.tag,
         description: values.description || "",
         highlights: highlights, // Use the highlights state directly
+        specs: values.specs
+          ? values.specs
+            .split("\n")
+            .map((line) => {
+              const [label, ...valueParts] = line.split(":");
+              const value = valueParts.join(":").trim();
+              return { label: label.trim(), value };
+            })
+            .filter((spec) => spec.label && spec.value)
+          : undefined,
         aboutAuthor:
           values.aboutAuthorBio || values.aboutAuthorAchievements
             ? {
@@ -216,7 +233,9 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
       SuccessToast("Book updated successfully.");
       router.push("/management/books");
     } catch (err) {
-      const msg = (err as { data?: { message?: string } })?.data?.message || "Failed to update book.";
+      const msg =
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Failed to update book.";
       ErrorToast(msg);
     }
   };
@@ -226,9 +245,13 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
       <div className="space-y-4">
         <Title title="Edit Book" />
         {isLoading ? (
-          <p className="flex items-center justify-center gap-2 h-[50vh]"><Loader className="animate-spin size-8" /></p>
+          <p className="flex items-center justify-center gap-2 h-[50vh]">
+            <Loader className="animate-spin size-8" />
+          </p>
         ) : isError || !book ? (
-          <p className="flex items-center justify-center gap-2 h-[50vh] text-red-500">Failed to load book.</p>
+          <p className="flex items-center justify-center gap-2 h-[50vh] text-red-500">
+            Failed to load book.
+          </p>
         ) : (
           <Form {...form}>
             <form
@@ -236,21 +259,21 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
               className="space-y-6"
             >
               <div className="space-y-6">
-                <Card className="">
+                <Card>
                   <CardHeader className="space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div className="space-y-1">
                         <CardTitle>Core details</CardTitle>
                         <CardDescription>
-                            Update the key information readers and search tools
-                            rely on.
+                          Update the key information readers and search tools
+                          rely on.
                         </CardDescription>
                       </div>
                       <Badge
                         variant="secondary"
                         className="rounded-full px-3 py-1 text-xs uppercase tracking-wide"
                       >
-                          Required
+                        Required
                       </Badge>
                     </div>
                   </CardHeader>
@@ -418,41 +441,240 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
 
                     <div className="space-y-4">
                       <FormLabel>Cover image</FormLabel>
-                      {book.coverImage && (
-                        <div className="flex items-center gap-4">
-                          <div className="h-24 w-16 overflow-hidden rounded-md border bg-muted">
+                      <div className="space-y-4">
+                        {pendingImage && (
+                          <div className="overflow-hidden w-52 rounded-2xl border bg-background shadow-sm">
                             <img
-                              src={book.coverImage}
-                              alt={book.title}
-                              className="h-full w-full object-cover"
+                              src={URL.createObjectURL(pendingImage)}
+                              alt="New cover preview"
+                              className="h-64 w-full object-cover"
                             />
+                            <div className="flex items-start justify-between gap-3 border-t px-4 py-3 text-sm">
+                              <div className="space-y-1 min-w-0 flex-1">
+                                <p
+                                  className="font-medium leading-none truncate"
+                                  title={pendingImage.name}
+                                >
+                                  {pendingImage.name}
+                                </p>
+                                <p className="text-muted-foreground text-xs">
+                                  {Math.round(pendingImage.size / 1024)} KB
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => setPendingImage(null)}
+                                >
+                                  <X />
+                                </Button>
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-xs text-muted-foreground">
-                              Current cover image
-                          </p>
-                        </div>
-                      )}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(event) => {
-                          const file = event.target.files?.[0] || null;
-                          setPendingImage(file);
-                        }}
-                      />
+                        )}
+
+                        {!pendingImage && book.coverImage && (
+                          <div className="overflow-hidden w-52 rounded-2xl border bg-background shadow-sm">
+                            <div
+                              onClick={() => {
+                                const input = document.createElement("input");
+                                input.type = "file";
+                                input.accept = "image/*";
+                                input.onchange = (event) => {
+                                  const file =
+                                    (event.target as HTMLInputElement)
+                                      .files?.[0] || null;
+                                  setPendingImage(file);
+                                };
+                                input.click();
+                              }}
+                              className="w-full cursor-pointer group"
+                            >
+                              <img
+                                src={book.coverImage}
+                                alt={book.title}
+                                className="h-64 w-full object-cover group-hover:brightness-75 transition"
+                              />
+                              <div className="flex items-center justify-between gap-3 border-t px-4 py-3 text-sm group-hover:bg-muted/50 transition">
+                                <p className="text-muted-foreground text-xs">
+                                  Current cover image
+                                </p>
+                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={(e) => {
+                                      e.stopPropagation(); // Prevent parent click
+                                      setPendingImage(null); // This will show upload button
+                                    }}
+                                  >
+                                    <X />
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {!pendingImage && !book.coverImage && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const input = document.createElement("input");
+                              input.type = "file";
+                              input.accept = "image/*";
+                              input.onchange = (event) => {
+                                const file =
+                                  (event.target as HTMLInputElement)
+                                    .files?.[0] || null;
+                                setPendingImage(file);
+                              };
+                              input.click();
+                            }}
+                            className="group relative flex min-h-[220px] w-auto flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-muted-foreground/40 bg-muted/30 px-6 py-8 text-center transition hover:border-primary/60 hover:bg-primary/5"
+                          >
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/20 group-hover:text-primary">
+                              <Sparkles className="h-5 w-5" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="font-medium">Upload cover image</p>
+                              <p className="text-muted-foreground text-sm">
+                                Add a high-resolution image to showcase the
+                                book.
+                              </p>
+                            </div>
+                            <span className="text-muted-foreground text-xs">
+                              JPG or PNG, up to 5MB
+                            </span>
+                          </button>
+                        )}
+                      </div>
                       <p className="text-xs text-muted-foreground">
-                          Optional: upload a new image to replace the current
-                          cover.
+                        Optional: upload a new image to replace the current
+                        cover.
                       </p>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="">
+                <Card>
+                  <CardHeader className="space-y-3">
+                    <CardTitle>Description & author</CardTitle>
+                    <CardDescription>
+                      Add detailed description and author information.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description</FormLabel>
+                          <FormControl>
+                            <div className="rounded-xl border bg-background/80 p-2">
+                              <JoditEditor
+                                value={field.value || ""}
+                                config={config}
+                                onBlur={(newContent) =>
+                                  field.onChange(newContent)
+                                }
+                              />
+                            </div>
+                          </FormControl>
+                          <FormDescription>
+                            Add detailed description with rich formatting.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="aboutAuthorBio"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Author bio</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              rows={4}
+                              placeholder="Short bio about the author."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="aboutAuthorAchievements"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Author achievements</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              rows={4}
+                              placeholder={
+                                "One achievement per line (e.g. Winner of the National Children's Literature Award 2023)"
+                              }
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Will be sent as an array of strings in the API
+                            payload.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="space-y-3">
+                    <CardTitle>Specifications</CardTitle>
+                    <CardDescription>
+                      Technical details and specifications for the book.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="specs"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Book specifications</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              rows={6}
+                              placeholder={
+                                "e.g. Language: Bengali\ne.g. Publisher: Popy Books\ne.g. Page Count: 120\ne.g. ISBN: 978-984-1234567\ne.g. Format: Paperback"
+                              }
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Enter specifications as "Label: Value" pairs, one per line. These will be parsed and sent as structured data.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
                   <CardHeader className="space-y-3">
                     <CardTitle>Storytelling</CardTitle>
                     <CardDescription>
-                        Refine how the book is presented to your readers.
+                      Refine how the book is presented to your readers.
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
@@ -501,99 +723,23 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
                       </div>
 
                       <FormDescription>
-                        Add key selling points and features. Each highlight will be displayed as a separate item.
+                        Add key selling points and features. Each highlight will
+                        be displayed as a separate item.
                       </FormDescription>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="">
-                  <CardHeader className="space-y-3">
-                    <CardTitle>Description & author</CardTitle>
-                    <CardDescription>
-                        Add detailed description and author information.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Description</FormLabel>
-                          <FormControl>
-                            <div className="rounded-xl border bg-background/80 p-2">
-                              <JoditEditor
-                                value={field.value || ""}
-                                config={config}
-                                onBlur={(newContent) =>
-                                  field.onChange(newContent)
-                                }
-                              />
-                            </div>
-                          </FormControl>
-                          <FormDescription>
-                              Add detailed description with rich formatting.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="aboutAuthorBio"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Author bio</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              rows={4}
-                              placeholder="Short bio about the author."
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="aboutAuthorAchievements"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Author achievements</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              rows={4}
-                              placeholder={
-                                "One achievement per line (e.g. Winner of the National Children's Literature Award 2023)"
-                              }
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                              Will be sent as an array of strings in the API
-                              payload.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
-
-                <Card className="">
+                <Card>
                   <CardHeader>
                     <CardTitle>Save changes</CardTitle>
                     <CardDescription>
-                        Review your updates before saving them to the catalog.
+                      Review your updates before saving them to the catalog.
                     </CardDescription>
                   </CardHeader>
                   <CardFooter className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm text-muted-foreground">
-                        Changes will be visible wherever this book appears.
+                      Changes will be visible wherever this book appears.
                     </p>
                     <div className="flex gap-3">
                       <Button
@@ -601,7 +747,7 @@ const EditBookForm = ({ id }: EditBookFormProps) => {
                         variant="outline"
                         onClick={() => router.push("/management/books")}
                       >
-                          Cancel
+                        Cancel
                       </Button>
                       <Button
                         type="submit"
