@@ -40,3 +40,20 @@ export interface OrderResponse {
   };
   data: Order[];
 }
+
+export interface ApiError {
+  success: false;
+  message: string;
+  errorSources?: {
+    path: string;
+    message: string;
+  }[];
+  stack?: string | null;
+}
+
+export interface ApiErrorData {
+  data: {
+    success: false;
+    message: string;
+  };
+}

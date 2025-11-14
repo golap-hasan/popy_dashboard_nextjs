@@ -54,8 +54,8 @@ const OrderViewModal = ({ order }: { order: Order }) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[95vw] max-w-[95vw] sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl max-h-[95vh] p-0" showCloseButton={false}>
-        <ScrollArea className="h-[80vh] sm:h-[70vh] md:h-[75vh]">
-          <div className="min-h-full bg-linear-to-b from-background to-muted/60 rounded-xl overflow-hidden">
+        <ScrollArea className="h-[80vh] sm:h-[70vh] md:h-auto overflow-hidden">
+          <div className="min-h-full rounded-xl overflow-hidden">
             {/* Header */}
             <div className="border-b bg-muted/40">
               <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
@@ -134,7 +134,7 @@ const OrderViewModal = ({ order }: { order: Order }) => {
                   </div>
                   <div className="space-y-0.5 sm:space-y-1 flex-1">
                     <p className="text-[10px] sm:text-xs font-medium text-muted-foreground">Payment method</p>
-                    <p className="text-xs sm:text-sm font-semibold">{order.paymentMethod}</p>
+                    <p className="text-xs sm:text-sm font-semibold">{order.paymentMethod === "COD" ? "Cash on delivery" : "Online"}</p>
                   </div>
                 </div>
               </div>

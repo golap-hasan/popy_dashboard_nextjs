@@ -18,12 +18,12 @@ const eslintConfig = defineConfig([
       "eqeqeq": ["error", "always"],
       // "curly": ["error", "all"],
       "no-multiple-empty-lines": ["warn", { "max": 1, "maxEOF": 1 }],
-      "object-curly-spacing": ["warn", "always"],
-      "array-bracket-spacing": ["warn", "never"],
+      // "object-curly-spacing": ["warn", "always"],
+      // "array-bracket-spacing": ["warn", "never"],
       "comma-spacing": ["warn", { "before": false, "after": true }],
       // "semi": ["warn", "always"],
       // "quotes": ["warn", "double"],
-      "indent": ["warn", 2, { "SwitchCase": 1 }],
+      // "indent": ["warn", 2, { "SwitchCase": 1 }],
     }
   },
   // Override default ignores of eslint-config-next.
