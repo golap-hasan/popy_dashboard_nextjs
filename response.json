@@ -1,90 +1,69 @@
 {
     "success": true,
-    "message": "Orders retrived succesfully!",
-    "meta": {
-        "page": 1,
-        "limit": 10,
-        "total": 3,
-        "totalPage": 1
-    },
+    "message": "Categories fetched successfully!",
     "data": [
         {
-            "_id": "6913833e3cb0070cc81d509d",
-            "user": {
-                "name": "Khaled",
-                "phone": "+8801832639064",
-                "email": "temothd@gmail.com"
-            },
-            "deliveryCharge": 0,
-            "finalAmount": 17500,
-            "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
-            "paymentMethod": "COD",
-            "status": "Completed",
-            "paymentStatus": "Paid",
-            "deliveryStatus": "Delivered",
-            "books": [
-                {
-                    "quantity": 50,
-                    "unitPrice": 350,
-                    "book": {
-                        "title": "Popy and the Enchanted Forest",
-                        "coverImage": "public/images/পানি-ও-আলো-একই-চিত্রে-1762885640564.png",
-                        "slug": "popy-and-the-enchanted-forest"
-                    }
-                }
-            ]
+            "_id": "691371273acccb0b139cba08",
+            "name": "Play Group & Nursery",
+            "slug": "play-group-nursery",
+            "createdAt": "2025-11-11T17:23:51.647Z",
+            "updatedAt": "2025-11-11T17:23:51.647Z"
         },
         {
-            "_id": "691383123cb0070cc81d5098",
-            "user": {
-                "name": "Khaled",
-                "phone": "+8801832639064",
-                "email": "temothd@gmail.com"
-            },
-            "deliveryCharge": 0,
-            "finalAmount": 17500,
-            "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
-            "paymentMethod": "COD",
-            "status": "Completed",
-            "paymentStatus": "Pending",
-            "deliveryStatus": "Processing",
-            "books": [
-                {
-                    "quantity": 50,
-                    "unitPrice": 350,
-                    "book": {
-                        "title": "Popy and the Enchanted Forest",
-                        "coverImage": "public/images/পানি-ও-আলো-একই-চিত্রে-1762885640564.png",
-                        "slug": "popy-and-the-enchanted-forest"
-                    }
-                }
-            ]
+            "_id": "691371473acccb0b139cba0d",
+            "name": "KG & Class One",
+            "slug": "kg-class-one",
+            "createdAt": "2025-11-11T17:24:23.905Z",
+            "updatedAt": "2025-11-11T17:24:23.905Z"
         },
         {
-            "_id": "691382e23cb0070cc81d5093",
-            "user": {
-                "name": "Khaled",
-                "phone": "+8801832639064",
-                "email": "temothd@gmail.com"
-            },
-            "deliveryCharge": 70,
-            "finalAmount": 770,
-            "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
-            "paymentMethod": "COD",
-            "status": "Completed",
-            "paymentStatus": "Pending",
-            "deliveryStatus": "Processing",
-            "books": [
-                {
-                    "quantity": 2,
-                    "unitPrice": 350,
-                    "book": {
-                        "title": "Popy and the Enchanted Forest",
-                        "coverImage": "public/images/পানি-ও-আলো-একই-চিত্রে-1762885640564.png",
-                        "slug": "popy-and-the-enchanted-forest"
-                    }
-                }
-            ]
+            "_id": "691371643acccb0b139cba12",
+            "name": "Primary (Class Two-Five)",
+            "slug": "primary-class-two-five",
+            "createdAt": "2025-11-11T17:24:52.014Z",
+            "updatedAt": "2025-11-11T17:24:52.014Z"
+        },
+        {
+            "_id": "691371e4dab6f47f858e7915",
+            "name": "Junior Secondary (Class Six-Eight)",
+            "slug": "junior-secondary",
+            "createdAt": "2025-11-11T17:27:00.654Z",
+            "updatedAt": "2025-11-11T17:27:00.654Z"
+        },
+        {
+            "_id": "6913721d8e3cb51c8e246dc1",
+            "name": "Secondary (Class Nine-SSC)",
+            "slug": "secondary-ssc",
+            "createdAt": "2025-11-11T17:27:57.034Z",
+            "updatedAt": "2025-11-11T17:27:57.034Z"
+        },
+        {
+            "_id": "6913723d8e3cb51c8e246dc6",
+            "name": "Higher Secondary (HSC)",
+            "slug": "hsc",
+            "createdAt": "2025-11-11T17:28:29.121Z",
+            "updatedAt": "2025-11-11T17:28:29.121Z"
+        },
+        {
+            "_id": "691372588e3cb51c8e246dcb",
+            "name": "BCS",
+            "slug": "bcs",
+            "createdAt": "2025-11-11T17:28:56.187Z",
+            "updatedAt": "2025-11-11T17:28:56.187Z"
+        },
+        {
+            "_id": "6913726e8e3cb51c8e246dd0",
+            "name": "University Admission",
+            "slug": "admission",
+            "createdAt": "2025-11-11T17:29:18.654Z",
+            "updatedAt": "2025-11-11T17:29:18.654Z"
+        },
+        {
+            "_id": "69137396d5a6e8d844222364",
+            "name": "Olympiad",
+            "slug": "olympiad",
+            "createdAt": "2025-11-11T17:34:14.148Z",
+            "updatedAt": "2025-11-11T17:34:14.148Z"
         }
     ]
 }

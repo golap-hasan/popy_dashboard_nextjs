@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Search } from "lucide-react";
 import Title from "@/components/ui/Title";
 import { Input } from "@/components/ui/input";
@@ -8,38 +7,41 @@ import CustomPagination from "@/common/CustomPagination";
 import TableSkeleton from "@/components/skeleton/TableSkeleton";
 import NoData from "@/common/NoData";
 import Error from "@/common/Error";
-import { categories, categories as seedCategories } from "./categoryData";
 import CategoryTable from "./CategoryTable";
 import PageLayout from "@/layout/PageLayout";
-import { Button } from "@/components/ui/button";
 import AddCategoryModal from "./AddCategoryModal";
-
-const PAGE_LIMIT = 10;
+import useSmartFetchHook from "@/hooks/useSmartFetchHook";
+import { useGetAllCategoryQuery } from "@/redux/feature/category/categoryApi";
+import {
+  Category,
+  CategoryQueryParams,
+} from "@/redux/feature/category/category.type";
 
 const Categories = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const searchTerm = "";
-  const totalPages = 2;
-  const currentPage = 1;
-  const setSearchTerm = () => {};
-  const setCurrentPage = () => {};
-  const isLoading = false;
-  const isError = false;
-
-  const handleAddCategory = (values: any) => {
-    console.log(values);
-  };
+  const {
+    searchTerm,
+    setSearchTerm,
+    currentPage,
+    setCurrentPage,
+    data, // Category[]
+    meta, // { page, limit, total, totalPage }
+    isLoading,
+    isError,
+  } = useSmartFetchHook<CategoryQueryParams, Category>(
+    useGetAllCategoryQuery,
+    {}
+  );
 
   return (
     <PageLayout
       pagination={
-        totalPages > 1 && (
+        meta?.totalPage &&
+        meta.totalPage > 1 && (
           <div className="mt-4">
             <CustomPagination
               currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
+              totalPages={meta.totalPage}
+              onPageChange={(page) => setCurrentPage(page)}
             />
           </div>
         )
@@ -47,7 +49,7 @@ const Categories = () => {
     >
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div className="flex items-center gap-4">
-          <Title title="CATEGORIES MANAGEMENT" length={categories.length} />
+          <Title title="CATEGORIES MANAGEMENT" length={meta?.total} />
         </div>
         <div className="flex items-center gap-4">
           <div className="relative w-full md:w-auto">
@@ -56,10 +58,10 @@ const Categories = () => {
               placeholder="Search categories..."
               className="pl-10 w-full md:w-64"
               value={searchTerm}
-              onChange={setSearchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-            <Button onClick={()=>setIsModalOpen(true)}>Add Category</Button>
+          <AddCategoryModal />
         </div>
       </div>
 
@@ -67,21 +69,15 @@ const Categories = () => {
         <TableSkeleton rows={10} />
       ) : isError ? (
         <Error msg="Failed to load categories." />
-      ) : categories.length > 0 ? (
+      ) : data?.length > 0 ? (
         <CategoryTable
-          data={categories}
+          data={data}
           page={currentPage}
-          limit={PAGE_LIMIT}
+          limit={meta?.limit ?? 10}
         />
       ) : (
         <NoData msg="No categories found." />
       )}
-
-      <AddCategoryModal
-        isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        onSuccess={handleAddCategory}
-      />
     </PageLayout>
   );
 };

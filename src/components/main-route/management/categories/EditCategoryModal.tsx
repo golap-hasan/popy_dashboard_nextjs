@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,8 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useCreateCategoryMutation } from "@/redux/feature/category/categoryApi";
+import { useUpdateCategoryMutation } from "@/redux/feature/category/categoryApi";
 import { SuccessToast, ErrorToast } from "@/lib/utils";
+import { Pencil } from "lucide-react";
+import type { Category } from "@/redux/feature/category/category.type";
 
 const formSchema = z.object({
   name: z
@@ -38,9 +40,13 @@ const formSchema = z.object({
     .regex(/^[a-z0-9-]+$/, { message: "Slug can only contain lowercase letters, numbers, and hyphens." }),
 });
 
-const AddCategoryModal = () => {
+interface EditCategoryModalProps {
+  category: Category;
+}
+
+const EditCategoryModal = ({ category }: EditCategoryModalProps) => {
   const [open, setOpen] = useState(false);
-  const [createCategory, { isLoading }] = useCreateCategoryMutation();
+  const [updateCategory, { isLoading }] = useUpdateCategoryMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,26 +56,35 @@ const AddCategoryModal = () => {
     },
   });
 
+  // Pre-fill form when category changes
+  useEffect(() => {
+    form.reset({
+      name: category.name,
+      slug: category.slug,
+    });
+  }, [category, form]);
+
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await createCategory({ name: values.name, slug: values.slug }).unwrap();
-      SuccessToast("Category created successfully!");
-      form.reset();
-      setOpen(false);
+      await updateCategory({ id: category._id, name: values.name, slug: values.slug }).unwrap();
+      SuccessToast("Category updated successfully!");
+      setOpen(false); // Close modal on success
     } catch (error: unknown) {
-      ErrorToast((error as { data?: { message?: string } })?.data?.message || "Failed to create category.");
+      ErrorToast((error as { data?: { message?: string } })?.data?.message || "Failed to update category.");
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Add Category</Button>
+        <Button variant="outline" size="icon">
+          <Pencil className="h-4 w-4" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add category</DialogTitle>
-          <DialogDescription>Provide a clear, searchable name for the new category.</DialogDescription>
+          <DialogTitle>Edit category</DialogTitle>
+          <DialogDescription>Update the category name and slug.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
@@ -100,11 +115,11 @@ const AddCategoryModal = () => {
               )}
             />
             <DialogFooter className="sm:justify-between">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              <Button type="button" variant="outline">
                 Cancel
               </Button>
               <Button loading={isLoading} type="submit" disabled={isLoading}>
-                Save category
+                Update category
               </Button>
             </DialogFooter>
           </form>
@@ -114,4 +129,4 @@ const AddCategoryModal = () => {
   );
 };
 
-export default AddCategoryModal;
+export default EditCategoryModal;
