@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 // import { Eye } from "lucide-react";
 import { Pencil } from "lucide-react";
 import type { Book } from "@/redux/feature/book/book.type";
-import { getImageUrl } from "@/lib/utils";
+import { getImageUrl, getInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const formatPrice = (price: number) => `৳${Number(price).toLocaleString()}`;
 
@@ -85,15 +86,15 @@ const BookTable = ({
             <TableRow key={book._id}>
               <TableCell>{(page - 1) * limit + index + 1}</TableCell>
               <TableCell>
-                {book.coverImage ? (
-                  <img
-                    src={getImageUrl(book?.coverImage)}
+                <Avatar className="h-12 w-9 rounded">
+                  <AvatarImage
+                    src={book.coverImage ? getImageUrl(book.coverImage) : undefined}
                     alt={book.title}
-                    className="h-12 w-9 object-cover rounded"
                   />
-                ) : (
-                  <div className="h-12 w-9 bg-muted rounded" />
-                )}
+                  <AvatarFallback className="h-12 w-9 bg-muted rounded text-xs">
+                    {getInitials(book.title)}
+                  </AvatarFallback>
+                </Avatar>
               </TableCell>
               <TableCell className="min-w-[220px]">
                 <div className="flex flex-col">

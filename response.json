@@ -1,69 +1,111 @@
 {
     "success": true,
-    "message": "Categories fetched successfully!",
+    "message": "Users retrieved successfully!",
+    "meta": {
+        "page": 1,
+        "limit": 10,
+        "total": 7,
+        "totalPage": 1
+    },
     "data": [
         {
-            "_id": "691371273acccb0b139cba08",
-            "name": "Play Group & Nursery",
-            "slug": "play-group-nursery",
-            "createdAt": "2025-11-11T17:23:51.647Z",
-            "updatedAt": "2025-11-11T17:23:51.647Z"
+            "_id": "6916369686d99ceb7b313adc",
+            "name": "Khaled",
+            "address": "Mohakhali, Dhaka",
+            "phone": "+8801832639064",
+            "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+            "email": "khaledssbd@gmail.com",
+            "isVerifiedByOTP": false,
+            "role": "USER",
+            "isActive": true,
+            "isDeleted": false,
+            "createdAt": "2025-11-13T19:50:46.905Z",
+            "updatedAt": "2025-11-13T19:50:46.905Z"
         },
         {
-            "_id": "691371473acccb0b139cba0d",
-            "name": "KG & Class One",
-            "slug": "kg-class-one",
-            "createdAt": "2025-11-11T17:24:23.905Z",
-            "updatedAt": "2025-11-11T17:24:23.905Z"
+            "_id": "69147d1b36aff1ae8c0a2f26",
+            "name": "Khaled",
+            "address": "Kobita Vaban, Academy Road, Feni Sadar",
+            "phone": "+8801234567888",
+            "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+            "email": "nocil52444@etramay.com",
+            "isVerifiedByOTP": true,
+            "role": "USER",
+            "isActive": true,
+            "isDeleted": false,
+            "createdAt": "2025-11-12T12:27:07.552Z",
+            "updatedAt": "2025-11-12T12:27:59.072Z"
         },
         {
-            "_id": "691371643acccb0b139cba12",
-            "name": "Primary (Class Two-Five)",
-            "slug": "primary-class-two-five",
-            "createdAt": "2025-11-11T17:24:52.014Z",
-            "updatedAt": "2025-11-11T17:24:52.014Z"
+            "_id": "69145daa6fa95b2c3192f594",
+            "name": "Khaled",
+            "address": "Mohakhali, Dhaka",
+            "phone": "+8801832639064",
+            "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+            "email": "redacip1623@etramay.com",
+            "isVerifiedByOTP": false,
+            "role": "USER",
+            "isActive": true,
+            "isDeleted": false,
+            "createdAt": "2025-11-12T10:12:58.703Z",
+            "updatedAt": "2025-11-12T10:12:58.703Z"
         },
         {
-            "_id": "691371e4dab6f47f858e7915",
-            "name": "Junior Secondary (Class Six-Eight)",
-            "slug": "junior-secondary",
-            "createdAt": "2025-11-11T17:27:00.654Z",
-            "updatedAt": "2025-11-11T17:27:00.654Z"
+            "_id": "691458f76fa95b2c3192f591",
+            "name": "Khaled",
+            "address": "Kobita Vaban, Academy Road, Feni Sadar",
+            "phone": "+8801234567888",
+            "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+            "email": "docay89761@fermiro.com",
+            "isVerifiedByOTP": true,
+            "role": "USER",
+            "isActive": true,
+            "isDeleted": false,
+            "createdAt": "2025-11-12T09:52:55.324Z",
+            "updatedAt": "2025-11-12T10:45:49.138Z"
         },
         {
-            "_id": "6913721d8e3cb51c8e246dc1",
-            "name": "Secondary (Class Nine-SSC)",
-            "slug": "secondary-ssc",
-            "createdAt": "2025-11-11T17:27:57.034Z",
-            "updatedAt": "2025-11-11T17:27:57.034Z"
+            "_id": "6913686d84cc03e33bb62e41",
+            "name": "Khaled",
+            "address": "Mohakhali, Dhaka",
+            "phone": "+8801832639064",
+            "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+            "email": "redacip162@etramay.com",
+            "isVerifiedByOTP": true,
+            "role": "USER",
+            "isActive": true,
+            "isDeleted": false,
+            "createdAt": "2025-11-11T16:46:37.366Z",
+            "updatedAt": "2025-11-12T10:13:51.525Z"
         },
         {
-            "_id": "6913723d8e3cb51c8e246dc6",
-            "name": "Higher Secondary (HSC)",
-            "slug": "hsc",
-            "createdAt": "2025-11-11T17:28:29.121Z",
-            "updatedAt": "2025-11-11T17:28:29.121Z"
+            "_id": "6913684384cc03e33bb62e3e",
+            "name": "Khaled",
+            "address": "Mohakhali, Dhaka",
+            "phone": "+8801832639064",
+            "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+            "email": "temothd2@gmail.com",
+            "isVerifiedByOTP": false,
+            "role": "USER",
+            "isActive": true,
+            "isDeleted": false,
+            "createdAt": "2025-11-11T16:45:55.831Z",
+            "updatedAt": "2025-11-11T16:45:55.831Z"
         },
         {
-            "_id": "691372588e3cb51c8e246dcb",
-            "name": "BCS",
-            "slug": "bcs",
-            "createdAt": "2025-11-11T17:28:56.187Z",
-            "updatedAt": "2025-11-11T17:28:56.187Z"
-        },
-        {
-            "_id": "6913726e8e3cb51c8e246dd0",
-            "name": "University Admission",
-            "slug": "admission",
-            "createdAt": "2025-11-11T17:29:18.654Z",
-            "updatedAt": "2025-11-11T17:29:18.654Z"
-        },
-        {
-            "_id": "69137396d5a6e8d844222364",
-            "name": "Olympiad",
-            "slug": "olympiad",
-            "createdAt": "2025-11-11T17:34:14.148Z",
-            "updatedAt": "2025-11-11T17:34:14.148Z"
+            "_id": "690db6850c5fcc4fa5af6ac4",
+            "name": "Khaled",
+            "address": "Mohakhali, Dhaka",
+            "phone": "+8801832639064",
+            "image": "public/images/58771362-b905-43c0-b444-4b7cb56f1723-1762879968171.png",
+            "email": "temothd@gmail.com",
+            "isVerifiedByOTP": true,
+            "role": "USER",
+            "isActive": true,
+            "isDeleted": false,
+            "createdAt": "2025-11-07T09:06:13.371Z",
+            "updatedAt": "2025-11-13T19:53:25.267Z",
+            "passwordChangedAt": "2025-11-11T16:55:25.996Z"
         }
     ]
 }

@@ -11,10 +11,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Ban } from 'lucide-react';
+// import { Button } from '@/components/ui/button';
+// import { Eye } from 'lucide-react';
+import { User } from '@/redux/feature/user/user.type';
 
-const UsersTable = ({ data, page, limit, onBlock }: any) => {
+interface UsersTableProps {
+  data: User[];
+  page: number;
+  limit: number;
+}
+
+const UsersTable = ({ data, page, limit }: UsersTableProps) => {
     return (
         <>
             <ScrollArea className="w-[calc(100vw-32px)] overflow-hidden overflow-x-auto md:w-full rounded-xl whitespace-nowrap">
@@ -24,46 +31,51 @@ const UsersTable = ({ data, page, limit, onBlock }: any) => {
                             <TableHead>SN</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Email</TableHead>
-                            <TableHead>Phone Number</TableHead>
-                            <TableHead>Company ID</TableHead>
+                            <TableHead>Phone</TableHead>
+                            <TableHead>Address</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead className="text-center">Action</TableHead>
+                            <TableHead>Role</TableHead>
+                            {/* <TableHead className="text-center">Action</TableHead> */}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data?.map((user: any, index: any) => (
+                        {data?.map((user: User, index: number) => (
                             <TableRow key={user._id}>
                                 <TableCell>{(page - 1) * limit + index + 1}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
                                         <Avatar className="border w-10 h-10">
-                                            <AvatarImage src={user.profile_image || ''} alt={user.name} />
+                                            <AvatarImage src={user.image || ''} alt={user.name} />
                                             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                                         </Avatar>
                                         <span className="font-medium">{user.name}</span>
                                     </div>
                                 </TableCell>
                                 <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.phone_number || 'Not Available Long'}</TableCell>
-                                <TableCell className="font-mono text-xs">{user.company_id}</TableCell>
+                                <TableCell>{user.phone}</TableCell>
+                                <TableCell className="max-w-[200px] truncate" title={user.address}>
+                                    {user.address}
+                                </TableCell>
                                 <TableCell>
                                     <Badge
                                         variant={
-                                            user.status === 'active' ? 'default' :
-                                                user.status === 'pending' ? 'warning' : 'destructive'
+                                            user.isActive ? 'default' : 'destructive'
                                         }
                                     >
-                                        {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                                        {user.isActive ? 'Active' : 'Inactive'}
                                     </Badge>
                                 </TableCell>
-                                <TableCell className="text-center">
-                                    <Button
-                                        onClick={() => onBlock(user._id)}
-                                        variant="outline" size="icon"
-                                        className="text-red-500">
-                                        <Ban className="h-5 w-5" />
-                                    </Button>
+                                <TableCell>
+                                    <Badge variant="outline">
+                                        {user.role}
+                                    </Badge>
                                 </TableCell>
+                                {/* <TableCell className="text-center">
+                                    <Button
+                                        variant="outline" size="icon">
+                                        <Eye />
+                                    </Button>
+                                </TableCell> */}
                             </TableRow>
                         ))}
                     </TableBody>

@@ -14,7 +14,7 @@ const userApi = baseApi.injectEndpoints({
           });
         }
         return {
-          url: "/dashboard/admin-employer-profile",
+          url: "/user/admin-get-all",
           method: "GET",
           params,
         };
@@ -23,27 +23,27 @@ const userApi = baseApi.injectEndpoints({
     }),
 
     // BLOCK UNBLOCK TOGGLE USER
-    blockUser: builder.mutation({
-      query: (data) => ({
-        url: `/auth/block-unblock`,
-        method: "PATCH",
-        body: data,
-      }),
-      invalidatesTags: ["USER"],
-    }),
+    // blockUser: builder.mutation({
+    //   query: (data) => ({
+    //     url: `/auth/block-unblock`,
+    //     method: "PATCH",
+    //     body: data,
+    //   }),
+    //   invalidatesTags: ["USER"],
+    // }),
 
-    activateUser: builder.mutation({
-      query: (employerId) => ({
-        url: `/dashboard/admin/approved_employer?status=active&employerId=${employerId}`,
-        method: "PATCH",
-      }),
-      invalidatesTags: ["USER"],
-    }),
+    // activateUser: builder.mutation({
+    //   query: (employerId) => ({
+    //     url: `/dashboard/admin/approved_employer?status=active&employerId=${employerId}`,
+    //     method: "PATCH",
+    //   }),
+    //   invalidatesTags: ["USER"],
+    // }),
   }),
 });
 
 export const {
   useGetAllUserQuery,
-  useBlockUserMutation,
-  useActivateUserMutation,
+  // useBlockUserMutation,
+  // useActivateUserMutation,
 } = userApi;

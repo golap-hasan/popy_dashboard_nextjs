@@ -3,7 +3,7 @@ import type { ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { toast } from "sonner"
 import { format } from "date-fns";
-import { baseUrl } from "@/redux/feature/baseApi";
+import { imageUrl } from "@/redux/feature/baseApi";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -38,12 +38,8 @@ export const getInitials = (name: string) => {
 export const getImageUrl = (imagePath: string) => {
   if (!imagePath) return '';
   // If absolute URL, return as-is
-  if (/^https?:\/\//i.test(imagePath)) return imagePath;
-  // Build from API origin (strip path like /api/v1)
-  const origin = new URL(baseUrl).origin;
-  // Preserve 'public/' part; only remove leading slashes if present
-  const cleaned = imagePath.replace(/^\/+/, '');
-  return `${origin}/${cleaned}`;
+  if (/^http?:\/\//i.test(imagePath)) return imagePath;
+  return `${imageUrl}/${imagePath}`;
 };
 
 // Format Date 
