@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Plus, Search } from "lucide-react";
 import Title from "@/components/ui/Title";
 import { Input } from "@/components/ui/input";
@@ -10,68 +10,54 @@ import TableSkeleton from "@/components/skeleton/TableSkeleton";
 import NoData from "@/common/NoData";
 import Error from "@/common/Error";
 import AdminTable from "./Admintable";
-import { admins as seedAdmins } from "./adminData";
 import { Button } from "@/components/ui/button";
-import AddAdminModal from "./AddAdminModal";
-import { useRouter } from "next/navigation";
+import CreateAdminModal from "./CreateAdminModal";
+import useSmartFetchHook from "@/hooks/useSmartFetchHook";
+import {
+  useGetAllAdminQuery,
+} from "@/redux/feature/admin/adminApi";
+import type {
+  Admin,
+  AdminQueryParams,
+} from "@/redux/feature/admin/admin.types";
 
 const PAGE_LIMIT = 10;
 
 const Admins = () => {
-  const [adminList, setAdminList] = useState(seedAdmins);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const isLoading = false;
-  const isError = false;
+
+  const {
+    searchTerm,
+    setSearchTerm,
+    currentPage,
+    setCurrentPage,
+    data, // Admin[]
+    isLoading,
+    isError,
+  } = useSmartFetchHook<AdminQueryParams, Admin>(
+    useGetAllAdminQuery,
+    {}
+  );
 
   const filteredAdmins = useMemo(() => {
-    if (!searchTerm.trim()) return adminList;
+    if (!searchTerm.trim()) return data;
 
     const lowercasedTerm = searchTerm.toLowerCase();
-    return adminList.filter(
-      (admin) =>
-        admin.name.toLowerCase().includes(lowercasedTerm) ||
-        admin.email.toLowerCase().includes(lowercasedTerm) ||
-        admin.phone.includes(searchTerm) ||
-        admin.role.toLowerCase().includes(lowercasedTerm)
-    );
-  }, [adminList, searchTerm]);
+    return data.filter((admin) => {
+      const nameMatch = admin.name?.toLowerCase().includes(lowercasedTerm);
+      const emailMatch = admin.email?.toLowerCase().includes(lowercasedTerm);
+      const phoneMatch = admin.phone?.includes(searchTerm);
+      const roleMatch = admin.role?.toLowerCase().includes(lowercasedTerm);
+
+      return nameMatch || emailMatch || phoneMatch || roleMatch;
+    });
+  }, [data, searchTerm]);
 
   const totalPages = Math.max(1, Math.ceil(filteredAdmins.length / PAGE_LIMIT));
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      router.push(`?page=${totalPages}`);
-    }
-  }, [currentPage, totalPages, router]);
 
   const paginatedAdmins = useMemo(() => {
     const start = (currentPage - 1) * PAGE_LIMIT;
     return filteredAdmins.slice(start, start + PAGE_LIMIT);
   }, [filteredAdmins, currentPage]);
-
-  const handleAddAdmin = (values: {
-    name: string;
-    email: string;
-    phone: string;
-    role: string;
-    password: string;
-  }) => {
-    const newAdmin = {
-      _id: crypto.randomUUID(),
-      ...values,
-      status: "pending",
-      lastActiveAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-    };
-
-    setAdminList((prev) => [newAdmin, ...prev]);
-    setIsModalOpen(false);
-    setCurrentPage(1);
-  };
 
   return (
     <>
@@ -89,7 +75,7 @@ const Admins = () => {
         }
       >
         <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <Title title="ADMIN MANAGEMENT" length={adminList.length} />
+          <Title title="ADMIN MANAGEMENT" length={data.length} />
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
             <div className="relative w-full sm:max-w-xs">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -103,10 +89,12 @@ const Admins = () => {
                 }}
               />
             </div>
-            <Button onClick={() => setIsModalOpen(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Admin
-            </Button>
+            <CreateAdminModal>
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Add Admin
+              </Button>
+            </CreateAdminModal>
           </div>
         </div>
 
@@ -124,12 +112,6 @@ const Admins = () => {
           <NoData msg="No admins found." />
         )}
       </PageLayout>
-
-      <AddAdminModal
-        isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        onSuccess={handleAddAdmin}
-      />
     </>
   );
 };

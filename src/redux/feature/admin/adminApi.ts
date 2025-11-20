@@ -14,7 +14,7 @@ const adminApi = baseApi.injectEndpoints({
           });
         }
         return {
-          url: "/admin/all-admins",
+          url: "/admin",
           method: "GET",
           params,
         };
@@ -25,7 +25,7 @@ const adminApi = baseApi.injectEndpoints({
     // ADD ADMIN
     addAdmin: builder.mutation({
       query: (data) => ({
-        url: "/admin/create-admin",
+        url: "/admin",
         method: "POST",
         body: data,
       }),
@@ -35,7 +35,7 @@ const adminApi = baseApi.injectEndpoints({
     // UPDATE ADMIN
     updateAdmin: builder.mutation({
       query: ({ data, id }) => ({
-        url: `/admin/update-admin/${id}`,
+        url: `/admin/${id}`,
         method: "PATCH",
         body: data,
       }),
@@ -43,13 +43,13 @@ const adminApi = baseApi.injectEndpoints({
     }),
 
     // DELETE ADMIN
-    deleteAdmin: builder.mutation({
-      query: (id) => ({
-        url: `/admin/delete-admin/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["ADMIN"],
-    }),
+    // deleteAdmin: builder.mutation({
+    //   query: (id) => ({
+    //     url: `/admin/delete-admin/${id}`,
+    //     method: "DELETE",
+    //   }),
+    //   invalidatesTags: ["ADMIN"],
+    // }),
   }),
 });
 
@@ -57,5 +57,5 @@ export const {
   useGetAllAdminQuery,
   useAddAdminMutation,
   useUpdateAdminMutation,
-  useDeleteAdminMutation,
+  // useDeleteAdminMutation,
 } = adminApi;
