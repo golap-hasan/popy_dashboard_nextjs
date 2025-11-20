@@ -166,7 +166,7 @@ const AddBookForm = () => {
       formData.append("data", JSON.stringify(payload));
 
       if (pendingImage) {
-        formData.append("file", pendingImage);
+        formData.append("book", pendingImage);
       }
 
       await createBook(formData).unwrap();
