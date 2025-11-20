@@ -1,6 +1,6 @@
 'use client';
 
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -87,9 +87,10 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
 
     const settingsSubItems = useMemo<SidebarNavItem[]>(() => [
         { name: 'Profile', icon: UserRoundPen, href: '/settings/profile' },
-        { name: 'About', icon: BadgeInfo, href: '/settings/about' },
-        { name: 'Terms', icon: ReceiptText, href: '/settings/terms' },
-        { name: 'Privacy', icon: GlobeLock, href: '/settings/privacy' },
+        { name: 'About Us', icon: BadgeInfo, href: '/settings/about' },
+        { name: 'Terms & Condition', icon: ReceiptText, href: '/settings/terms' },
+        { name: 'Privacy Policy', icon: GlobeLock, href: '/settings/privacy' },
+        { name: 'Return Policy', icon: GlobeLock, href: '/settings/return-policy' },
     ], []);
 
     return (

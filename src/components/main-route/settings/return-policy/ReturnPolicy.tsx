@@ -1,4 +1,3 @@
-
 "use client";
 
 import dynamic from "next/dynamic";
@@ -22,23 +21,23 @@ import {
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
-const Terms = () => {
+const ReturnPolicy = () => {
   const [content, setContent] = useState("");
   const editor = useRef(null);
   const initializedRef = useRef(false);
   const { theme } = useTheme();
 
-  // Fetch terms & conditions page data
-  const { data: termsData, isLoading: isFetching } =
-    useGetLegalPageQuery("terms-and-condition");
+  // Fetch return policy page data
+  const { data: returnData, isLoading: isFetching } =
+    useGetLegalPageQuery("return-policy");
 
-  // Mutation for saving terms & conditions page
-  const [addOrUpdateTerms, { isLoading: addTermsLoading }] =
+  // Mutation for saving return policy page
+  const [addOrUpdateReturnPolicy, { isLoading: addReturnLoading }] =
     useAddOrUpdateLegalPageMutation();
 
   // Initialize content from API data only once
   useEffect(() => {
-    const apiData = termsData as { data?: { content?: string } } | undefined;
+    const apiData = returnData as { data?: { content?: string } } | undefined;
     if (
       apiData?.data?.content &&
       typeof apiData.data.content === "string" &&
@@ -49,20 +48,20 @@ const Terms = () => {
         setContent(apiData?.data?.content as string);
       });
     }
-  }, [termsData]);
+  }, [returnData]);
 
   const handleSubmit = async () => {
     try {
-      const res = (await addOrUpdateTerms({
-        type: "terms-and-condition",
-        title: "Terms & Conditions",
+      const res = (await addOrUpdateReturnPolicy({
+        type: "return-policy",
+        title: "Return Policy",
         content: content,
       }).unwrap()) as { message?: string };
 
-      SuccessToast(res.message || "Terms saved successfully");
+      SuccessToast(res.message || "Return policy saved successfully");
     } catch (error: unknown) {
       const err = error as { data?: { message?: string }; message?: string };
-      const msg = err?.data?.message || "Failed to save terms";
+      const msg = err?.data?.message || "Failed to save return policy";
       ErrorToast(msg);
     }
   };
@@ -85,7 +84,7 @@ const Terms = () => {
       showCharsCounter: true,
       showWordsCounter: true,
       showXPathInStatusbar: false,
-      placeholder: "Terms & conditions placeholder",
+      placeholder: "Return policy placeholder",
       theme: currentTheme,
       buttons: [
         "bold",
@@ -121,15 +120,15 @@ const Terms = () => {
     <PageLayout>
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <Title title="Terms & Conditions" />
+          <Title title="Return Policy" />
           {!isLoading && (
             <Button
-              disabled={addTermsLoading}
+              disabled={addReturnLoading}
               onClick={handleSubmit}
               className="min-w-[120px] gap-2 shadow-md hover:shadow-lg transition-all duration-200"
               size="default"
             >
-              {addTermsLoading ? (
+              {addReturnLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   <span>Saving...</span>
@@ -144,7 +143,7 @@ const Terms = () => {
           )}
         </div>
         {!isLoading &&
-          (termsData as { data?: { updatedAt?: string } } | undefined)?.data
+          (returnData as { data?: { updatedAt?: string } } | undefined)?.data
             ?.updatedAt && (
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/50 border border-border/50 text-sm">
               <Clock className="h-3.5 w-3.5 text-muted-foreground" />
@@ -152,7 +151,7 @@ const Terms = () => {
               <span className="font-semibold text-foreground">
                 {formatDateForDisplay(
                   (
-                    termsData as {
+                    returnData as {
                       data?: { updatedAt?: string };
                     }
                   )?.data?.updatedAt as string
@@ -178,4 +177,4 @@ const Terms = () => {
   );
 };
 
-export default Terms;
+export default ReturnPolicy;
