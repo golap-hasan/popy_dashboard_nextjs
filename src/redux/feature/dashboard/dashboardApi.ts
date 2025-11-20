@@ -2,31 +2,11 @@ import { baseApi } from "../baseApi";
 
 const dashboardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // GET DASHBOARD STATS
-    getDashboardStats: builder.query({
+    // GET DASHBOARD DATA
+    getDashboardData: builder.query({
       query: () => ({
-        url: "/dashboard/get-total-count",
+        url: "/user/meta-data",
         method: "GET",
-      }),
-      providesTags: ["DASHBOARD"],
-    }),
-
-    // GET DASHBOARD USER CHART
-    getDashboardUserChart: builder.query({
-      query: ({ years }: { years?: number }) => ({
-        url: "/dashboard/get-user-overview",
-        method: "GET",
-        params: years ? { years } : {},
-      }),
-      providesTags: ["DASHBOARD"],
-    }),
-
-    // GET DASHBOARD EARNING CHART
-    getDashboardEarningChart: builder.query({
-      query: ({ years }: { years?: number }) => ({
-        url: "/dashboard/get-earning-overview",
-        method: "GET",
-        params: years ? { years } : {},
       }),
       providesTags: ["DASHBOARD"],
     }),
@@ -34,7 +14,5 @@ const dashboardApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetDashboardStatsQuery,
-  useGetDashboardUserChartQuery,
-  useGetDashboardEarningChartQuery,
+  useGetDashboardDataQuery,
 } = dashboardApi;

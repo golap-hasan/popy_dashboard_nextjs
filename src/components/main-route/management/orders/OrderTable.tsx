@@ -66,7 +66,7 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
             <TableRow>
               <TableHead>SN</TableHead>
               <TableHead>Customer</TableHead>
-              <TableHead>Books</TableHead>
+              <TableHead>Order ID</TableHead>
               <TableHead>Total Qty</TableHead>
               <TableHead>Total Amount</TableHead>
               <TableHead>Status</TableHead>
@@ -95,17 +95,8 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="min-w-[220px]">
-                    <div className="flex flex-col gap-1">
-                      {order?.books?.map((bookItem, bookIndex) => (
-                        <div key={bookIndex} className="flex flex-col">
-                          <span className="font-medium text-sm">{bookItem?.book?.title}</span>
-                          <span className="text-xs text-muted-foreground">
-                            ৳{bookItem?.unitPrice} × {bookItem?.quantity}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                  <TableCell className="min-w-[220px] font-mono text-xs">
+                    {order._id}
                   </TableCell>
                   <TableCell>{totalQuantity}</TableCell>
                   <TableCell>৳{totalAmount?.toLocaleString()}</TableCell>

@@ -1,0 +1,469 @@
+{
+    "success": true,
+    "message": "Dashboard data retrieved successfully!",
+    "data": {
+        "stats": {
+            "totalBooks": 2,
+            "totalOrders": 7,
+            "totalRevenue": 77770,
+            "activeCustomers": 1
+        },
+        "userGrowthSeries": [
+            {
+                "year": 2025,
+                "data": [
+                    {
+                        "month": "Nov",
+                        "users": 11
+                    }
+                ]
+            }
+        ],
+        "revenueSeries": [
+            {
+                "year": 2025,
+                "data": [
+                    {
+                        "month": "Nov",
+                        "income": 77770
+                    }
+                ],
+                "yearlyTotal": 77770
+            }
+        ],
+        "pendingOrders": [
+            {
+                "_id": "691c7b1a98e90fac8f8206a1",
+                "user": "6919eda6ae360dd2deb9d7c2",
+                "books": [
+                    {
+                        "quantity": 1,
+                        "unitPrice": 350,
+                        "book": {
+                            "_id": "691ae5472cf91421a1396915",
+                            "title": "Popy and the Enchanted Forest2",
+                            "subtitle": "A Magical Journey Through Dreams",
+                            "author": "Nusrat Jahan",
+                            "slug": "popy-and-the-enchanted-forest2",
+                            "category": "691371273acccb0b139cba08",
+                            "quantity": 120,
+                            "price": 350,
+                            "originalPrice": 450,
+                            "rating": 4.8,
+                            "reviewsCount": 35,
+                            "tag": "Adventure",
+                            "coverImage": "https://res.cloudinary.com/dweesppci/image/upload/v1763622581/qpm5vrqmhhn-1763622573279-book-image.jpg",
+                            "description": "Popy and the Enchanted Forest is a delightful tale of courage, friendship, and magic. Follow Popy as she discovers the secrets of an ancient forest and learns the power of kindness.",
+                            "highlights": [
+                                "Beautifully illustrated full-color pages",
+                                "Engaging and educational storytelling",
+                                "Perfect for ages 6-12",
+                                "Teaches empathy and teamwork"
+                            ],
+                            "specs": [
+                                {
+                                    "label": "Language",
+                                    "value": "Bengali"
+                                },
+                                {
+                                    "label": "Publisher",
+                                    "value": "Popy Books"
+                                },
+                                {
+                                    "label": "Page Count",
+                                    "value": "120"
+                                },
+                                {
+                                    "label": "ISBN",
+                                    "value": "978-984-1234567"
+                                },
+                                {
+                                    "label": "Format",
+                                    "value": "Paperback"
+                                }
+                            ],
+                            "aboutAuthor": {
+                                "bio": "Nusrat Jahan is a Bangladeshi children’s author known for her heartwarming stories that spark imagination and curiosity among young readers.",
+                                "achievements": [
+                                    "Winner of the National Children's Literature Award 2023",
+                                    "Published 10+ children's storybooks",
+                                    "Regular contributor to Shishu Patrika magazine"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "quantity": 1,
+                        "unitPrice": 350,
+                        "book": {
+                            "_id": "691380087fb197aec8dc24c8",
+                            "title": "Popy and the Enchanted Forest",
+                            "subtitle": "A Magical Journey Through Dreams",
+                            "author": "Nusrat Jahan",
+                            "slug": "popy-and-the-enchanted-forest",
+                            "category": "691371273acccb0b139cba08",
+                            "quantity": 18,
+                            "price": 350,
+                            "originalPrice": 450,
+                            "rating": 4.82051282051282,
+                            "reviewsCount": 39,
+                            "tag": "Adventure",
+                            "coverImage": "https://res.cloudinary.com/dweesppci/image/upload/v1763618418/b64hk7zuehf-1763618410488-book-image.jpg",
+                            "description": "Popy and the Enchanted Forest is a delightful tale of courage, friendship, and magic. Follow Popy as she discovers the secrets of an ancient forest and learns the power of kindness.",
+                            "highlights": [
+                                "Beautifully illustrated full-color pages",
+                                "Engaging and educational storytelling",
+                                "Perfect for ages 6-12",
+                                "Teaches empathy and teamwork"
+                            ],
+                            "specs": [
+                                {
+                                    "label": "Language",
+                                    "value": "Bengali"
+                                },
+                                {
+                                    "label": "Publisher",
+                                    "value": "Popy Books"
+                                },
+                                {
+                                    "label": "Page Count",
+                                    "value": "120"
+                                },
+                                {
+                                    "label": "ISBN",
+                                    "value": "978-984-1234567"
+                                },
+                                {
+                                    "label": "Format",
+                                    "value": "Paperback"
+                                }
+                            ],
+                            "aboutAuthor": {
+                                "bio": "Nusrat Jahan is a Bangladeshi children’s author known for her heartwarming stories that spark imagination and curiosity among young readers.",
+                                "achievements": [
+                                    "Winner of the National Children's Literature Award 2023",
+                                    "Published 10+ children's storybooks",
+                                    "Regular contributor to Shishu Patrika magazine"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "totalPrice": 700,
+                "deliveryCharge": 70,
+                "finalAmount": 770,
+                "shippingAddress": "Aqua Rower, Mohakhali, Dhaka, 1200",
+                "paymentMethod": "COD",
+                "status": "Completed",
+                "paymentStatus": "Pending",
+                "deliveryStatus": "Processing",
+                "customer": {
+                    "_id": "6919eda6ae360dd2deb9d7c2",
+                    "name": "Nurulla Hasan",
+                    "address": "Dinajpur, Bangladesh",
+                    "phone": "+8801750974716",
+                    "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+                    "email": "golaphasan5229@gmail.com",
+                    "isVerifiedByOTP": true,
+                    "isActive": true
+                }
+            },
+            {
+                "_id": "691c7add98e90fac8f82069a",
+                "user": "6919eda6ae360dd2deb9d7c2",
+                "books": [
+                    {
+                        "quantity": 1,
+                        "unitPrice": 350,
+                        "book": {
+                            "_id": "691ae5472cf91421a1396915",
+                            "title": "Popy and the Enchanted Forest2",
+                            "subtitle": "A Magical Journey Through Dreams",
+                            "author": "Nusrat Jahan",
+                            "slug": "popy-and-the-enchanted-forest2",
+                            "category": "691371273acccb0b139cba08",
+                            "quantity": 120,
+                            "price": 350,
+                            "originalPrice": 450,
+                            "rating": 4.8,
+                            "reviewsCount": 35,
+                            "tag": "Adventure",
+                            "coverImage": "https://res.cloudinary.com/dweesppci/image/upload/v1763622581/qpm5vrqmhhn-1763622573279-book-image.jpg",
+                            "description": "Popy and the Enchanted Forest is a delightful tale of courage, friendship, and magic. Follow Popy as she discovers the secrets of an ancient forest and learns the power of kindness.",
+                            "highlights": [
+                                "Beautifully illustrated full-color pages",
+                                "Engaging and educational storytelling",
+                                "Perfect for ages 6-12",
+                                "Teaches empathy and teamwork"
+                            ],
+                            "specs": [
+                                {
+                                    "label": "Language",
+                                    "value": "Bengali"
+                                },
+                                {
+                                    "label": "Publisher",
+                                    "value": "Popy Books"
+                                },
+                                {
+                                    "label": "Page Count",
+                                    "value": "120"
+                                },
+                                {
+                                    "label": "ISBN",
+                                    "value": "978-984-1234567"
+                                },
+                                {
+                                    "label": "Format",
+                                    "value": "Paperback"
+                                }
+                            ],
+                            "aboutAuthor": {
+                                "bio": "Nusrat Jahan is a Bangladeshi children’s author known for her heartwarming stories that spark imagination and curiosity among young readers.",
+                                "achievements": [
+                                    "Winner of the National Children's Literature Award 2023",
+                                    "Published 10+ children's storybooks",
+                                    "Regular contributor to Shishu Patrika magazine"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "quantity": 1,
+                        "unitPrice": 350,
+                        "book": {
+                            "_id": "691380087fb197aec8dc24c8",
+                            "title": "Popy and the Enchanted Forest",
+                            "subtitle": "A Magical Journey Through Dreams",
+                            "author": "Nusrat Jahan",
+                            "slug": "popy-and-the-enchanted-forest",
+                            "category": "691371273acccb0b139cba08",
+                            "quantity": 18,
+                            "price": 350,
+                            "originalPrice": 450,
+                            "rating": 4.82051282051282,
+                            "reviewsCount": 39,
+                            "tag": "Adventure",
+                            "coverImage": "https://res.cloudinary.com/dweesppci/image/upload/v1763618418/b64hk7zuehf-1763618410488-book-image.jpg",
+                            "description": "Popy and the Enchanted Forest is a delightful tale of courage, friendship, and magic. Follow Popy as she discovers the secrets of an ancient forest and learns the power of kindness.",
+                            "highlights": [
+                                "Beautifully illustrated full-color pages",
+                                "Engaging and educational storytelling",
+                                "Perfect for ages 6-12",
+                                "Teaches empathy and teamwork"
+                            ],
+                            "specs": [
+                                {
+                                    "label": "Language",
+                                    "value": "Bengali"
+                                },
+                                {
+                                    "label": "Publisher",
+                                    "value": "Popy Books"
+                                },
+                                {
+                                    "label": "Page Count",
+                                    "value": "120"
+                                },
+                                {
+                                    "label": "ISBN",
+                                    "value": "978-984-1234567"
+                                },
+                                {
+                                    "label": "Format",
+                                    "value": "Paperback"
+                                }
+                            ],
+                            "aboutAuthor": {
+                                "bio": "Nusrat Jahan is a Bangladeshi children’s author known for her heartwarming stories that spark imagination and curiosity among young readers.",
+                                "achievements": [
+                                    "Winner of the National Children's Literature Award 2023",
+                                    "Published 10+ children's storybooks",
+                                    "Regular contributor to Shishu Patrika magazine"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "totalPrice": 700,
+                "deliveryCharge": 70,
+                "finalAmount": 770,
+                "shippingAddress": "Aqua Rower, Mohakhali, Dhaka, 1200",
+                "paymentMethod": "COD",
+                "status": "Completed",
+                "paymentStatus": "Pending",
+                "deliveryStatus": "Processing",
+                "customer": {
+                    "_id": "6919eda6ae360dd2deb9d7c2",
+                    "name": "Nurulla Hasan",
+                    "address": "Dinajpur, Bangladesh",
+                    "phone": "+8801750974716",
+                    "image": "https://res.cloudinary.com/dweesppci/image/upload/v1746204369/wtmpcphfvexcq2ubcss0.png",
+                    "email": "golaphasan5229@gmail.com",
+                    "isVerifiedByOTP": true,
+                    "isActive": true
+                }
+            },
+            {
+                "_id": "691c7aa098e90fac8f820693",
+                "user": "690db6850c5fcc4fa5af6ac4",
+                "books": [
+                    {
+                        "quantity": 50,
+                        "unitPrice": 350,
+                        "book": {
+                            "_id": "691380087fb197aec8dc24c8",
+                            "title": "Popy and the Enchanted Forest",
+                            "subtitle": "A Magical Journey Through Dreams",
+                            "author": "Nusrat Jahan",
+                            "slug": "popy-and-the-enchanted-forest",
+                            "category": "691371273acccb0b139cba08",
+                            "quantity": 18,
+                            "price": 350,
+                            "originalPrice": 450,
+                            "rating": 4.82051282051282,
+                            "reviewsCount": 39,
+                            "tag": "Adventure",
+                            "coverImage": "https://res.cloudinary.com/dweesppci/image/upload/v1763618418/b64hk7zuehf-1763618410488-book-image.jpg",
+                            "description": "Popy and the Enchanted Forest is a delightful tale of courage, friendship, and magic. Follow Popy as she discovers the secrets of an ancient forest and learns the power of kindness.",
+                            "highlights": [
+                                "Beautifully illustrated full-color pages",
+                                "Engaging and educational storytelling",
+                                "Perfect for ages 6-12",
+                                "Teaches empathy and teamwork"
+                            ],
+                            "specs": [
+                                {
+                                    "label": "Language",
+                                    "value": "Bengali"
+                                },
+                                {
+                                    "label": "Publisher",
+                                    "value": "Popy Books"
+                                },
+                                {
+                                    "label": "Page Count",
+                                    "value": "120"
+                                },
+                                {
+                                    "label": "ISBN",
+                                    "value": "978-984-1234567"
+                                },
+                                {
+                                    "label": "Format",
+                                    "value": "Paperback"
+                                }
+                            ],
+                            "aboutAuthor": {
+                                "bio": "Nusrat Jahan is a Bangladeshi children’s author known for her heartwarming stories that spark imagination and curiosity among young readers.",
+                                "achievements": [
+                                    "Winner of the National Children's Literature Award 2023",
+                                    "Published 10+ children's storybooks",
+                                    "Regular contributor to Shishu Patrika magazine"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "totalPrice": 17500,
+                "deliveryCharge": 0,
+                "finalAmount": 17500,
+                "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
+                "paymentMethod": "COD",
+                "status": "Completed",
+                "paymentStatus": "Pending",
+                "deliveryStatus": "Processing",
+                "customer": {
+                    "_id": "690db6850c5fcc4fa5af6ac4",
+                    "name": "Khaled",
+                    "address": "Mohakhali, Dhaka",
+                    "phone": "+8801832639064",
+                    "image": "https://res.cloudinary.com/dweesppci/image/upload/v1763617888/88rl0r5fh4b-1763617880394-user-image.jpg",
+                    "email": "temothd@gmail.com",
+                    "isVerifiedByOTP": true,
+                    "isActive": true
+                }
+            },
+            {
+                "_id": "691382e23cb0070cc81d5093",
+                "user": "690db6850c5fcc4fa5af6ac4",
+                "books": [
+                    {
+                        "quantity": 2,
+                        "unitPrice": 350,
+                        "book": {
+                            "_id": "691380087fb197aec8dc24c8",
+                            "title": "Popy and the Enchanted Forest",
+                            "subtitle": "A Magical Journey Through Dreams",
+                            "author": "Nusrat Jahan",
+                            "slug": "popy-and-the-enchanted-forest",
+                            "category": "691371273acccb0b139cba08",
+                            "quantity": 18,
+                            "price": 350,
+                            "originalPrice": 450,
+                            "rating": 4.82051282051282,
+                            "reviewsCount": 39,
+                            "tag": "Adventure",
+                            "coverImage": "https://res.cloudinary.com/dweesppci/image/upload/v1763618418/b64hk7zuehf-1763618410488-book-image.jpg",
+                            "description": "Popy and the Enchanted Forest is a delightful tale of courage, friendship, and magic. Follow Popy as she discovers the secrets of an ancient forest and learns the power of kindness.",
+                            "highlights": [
+                                "Beautifully illustrated full-color pages",
+                                "Engaging and educational storytelling",
+                                "Perfect for ages 6-12",
+                                "Teaches empathy and teamwork"
+                            ],
+                            "specs": [
+                                {
+                                    "label": "Language",
+                                    "value": "Bengali"
+                                },
+                                {
+                                    "label": "Publisher",
+                                    "value": "Popy Books"
+                                },
+                                {
+                                    "label": "Page Count",
+                                    "value": "120"
+                                },
+                                {
+                                    "label": "ISBN",
+                                    "value": "978-984-1234567"
+                                },
+                                {
+                                    "label": "Format",
+                                    "value": "Paperback"
+                                }
+                            ],
+                            "aboutAuthor": {
+                                "bio": "Nusrat Jahan is a Bangladeshi children’s author known for her heartwarming stories that spark imagination and curiosity among young readers.",
+                                "achievements": [
+                                    "Winner of the National Children's Literature Award 2023",
+                                    "Published 10+ children's storybooks",
+                                    "Regular contributor to Shishu Patrika magazine"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "totalPrice": 700,
+                "deliveryCharge": 70,
+                "finalAmount": 770,
+                "shippingAddress": "House 15, Road 7, Dhanmondi, Dhaka",
+                "paymentMethod": "COD",
+                "status": "Completed",
+                "paymentStatus": "Paid",
+                "deliveryStatus": "Processing",
+                "customer": {
+                    "_id": "690db6850c5fcc4fa5af6ac4",
+                    "name": "Khaled",
+                    "address": "Mohakhali, Dhaka",
+                    "phone": "+8801832639064",
+                    "image": "https://res.cloudinary.com/dweesppci/image/upload/v1763617888/88rl0r5fh4b-1763617880394-user-image.jpg",
+                    "email": "temothd@gmail.com",
+                    "isVerifiedByOTP": true,
+                    "isActive": true
+                }
+            }
+        ]
+    }
+}
