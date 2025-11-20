@@ -20,7 +20,8 @@ import {
     Users,
     UserCog,
     Tags,
-    Contact
+    Contact,
+    Undo2
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from "react";
@@ -90,7 +91,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
         { name: 'About Us', icon: BadgeInfo, href: '/settings/about' },
         { name: 'Terms & Condition', icon: ReceiptText, href: '/settings/terms' },
         { name: 'Privacy Policy', icon: GlobeLock, href: '/settings/privacy' },
-        { name: 'Return Policy', icon: GlobeLock, href: '/settings/return-policy' },
+        { name: 'Return Policy', icon: Undo2, href: '/settings/return-policy' },
     ], []);
 
     return (
