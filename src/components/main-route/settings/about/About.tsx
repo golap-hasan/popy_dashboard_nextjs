@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState, startTransition } from "react";
 import Title from "@/components/ui/Title";
-import { SuccessToast } from "@/lib/utils";
+import { ErrorToast, formatDateForDisplay, SuccessToast } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import PageLayout from "@/layout/PageLayout";
@@ -31,23 +31,28 @@ const About = () => {
 
   // Initialize content from API data only once
   useEffect(() => {
-    if (aboutData?.data?.content && !initializedRef.current) {
+    const apiData = aboutData as { data?: { content?: string } } | undefined;
+    if (apiData?.data?.content && typeof apiData.data.content === "string" && !initializedRef.current) {
       initializedRef.current = true;
       startTransition(() => {
-        setContent(aboutData.data.content);
+        setContent(apiData?.data?.content as string);
       });
     }
   }, [aboutData]);
 
   const handleSubmit = async () => {
     try {
-      await addOrUpdateAbout({
+      const res = (await addOrUpdateAbout({
         type: "about-us",
-        data: { content: content },
-      }).unwrap();
-      SuccessToast("About saved successfully");
-    } catch {
-      SuccessToast("Failed to save about page");
+        title: "About Us",
+        content: content,
+      }).unwrap()) as { message?: string };
+
+      SuccessToast(res.message || "About saved successfully");
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string }; message?: string };
+      const msg = err?.data?.message || "Failed to save about page";
+      ErrorToast(msg);
     }
   };
 
@@ -101,30 +106,6 @@ const About = () => {
     };
   }, [theme]);
 
-  // Format date for display
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
-
-    if (diffInMinutes < 1) return "Just now";
-    if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""} ago`;
-    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
-    if (diffInDays < 7) return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
-
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   return (
     <PageLayout>
       <div className="mb-6">
@@ -133,19 +114,30 @@ const About = () => {
           {!isLoading && (
             <Button
               disabled={addAboutLoading}
-              className="min-w-[100px]"
               onClick={handleSubmit}
+              className="min-w-[120px] gap-2 shadow-md hover:shadow-lg transition-all duration-200"
+              size="default"
             >
-              {addAboutLoading ? "Saving..." : "Save"}
+              {addAboutLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  <span>Save Changes</span>
+                </>
+              )}
             </Button>
           )}
         </div>
-        {!isLoading && aboutData?.data?.updatedAt && (
+        {!isLoading && (aboutData as { data?: { updatedAt?: string } } | undefined)?.data?.updatedAt && (
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/50 border border-border/50 text-sm">
             <Clock className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Last updated</span>
             <span className="font-semibold text-foreground">
-              {formatDate(aboutData.data.updatedAt)}
+              {formatDateForDisplay((aboutData as { data?: { updatedAt?: string } })?.data?.updatedAt as string)}
             </span>
           </div>
         )}
