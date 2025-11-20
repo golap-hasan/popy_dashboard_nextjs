@@ -10,7 +10,7 @@ const Title = ({ title, length }: { title: string; length?: number }) => {
       <Button variant="ghost" size="icon" onClick={() => router.back()}>
         <ArrowLeft />
       </Button>
-      <h1 className="text-sm font-semibold tracking-[0.35em]">{title} {length && `(${length})`}</h1>
+      <h1 className="text-md font-semibold tracking-[0.35em]">{title} {length && `(${length})`}</h1>
     </div>
   );
 };

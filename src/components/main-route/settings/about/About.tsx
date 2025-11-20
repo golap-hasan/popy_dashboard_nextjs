@@ -6,7 +6,7 @@ import { ErrorToast, formatDateForDisplay, SuccessToast } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import PageLayout from "@/layout/PageLayout";
-import { Clock, Save, Loader2 } from "lucide-react";
+import { Save } from "lucide-react";
 import LegalEditorSkeleton from "@/components/skeleton/LegalSkeleton";
 import {
   useGetLegalPageQuery,
@@ -32,7 +32,11 @@ const About = () => {
   // Initialize content from API data only once
   useEffect(() => {
     const apiData = aboutData as { data?: { content?: string } } | undefined;
-    if (apiData?.data?.content && typeof apiData.data.content === "string" && !initializedRef.current) {
+    if (
+      apiData?.data?.content &&
+      typeof apiData.data.content === "string" &&
+      !initializedRef.current
+    ) {
       initializedRef.current = true;
       startTransition(() => {
         setContent(apiData?.data?.content as string);
@@ -108,39 +112,40 @@ const About = () => {
 
   return (
     <PageLayout>
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <Title title="About Us" />
+      <div className="mb-2">
+        <div className="flex justify-between">
+          <div className="flex flex-col items-start gap-3">
+            <Title title="About Us" />
+            <div>
+              {!isLoading &&
+              (aboutData as { data?: { updatedAt?: string } } | undefined)?.data
+                ?.updatedAt && (
+                <div className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <span>•</span>
+                  <span>Updated</span>
+                  <span className="font-medium text-foreground">
+                    {formatDateForDisplay(
+                      (aboutData as { data?: { updatedAt?: string } })?.data
+                        ?.updatedAt as string
+                    )}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
           {!isLoading && (
             <Button
               disabled={addAboutLoading}
               onClick={handleSubmit}
-              className="min-w-[120px] gap-2 shadow-md hover:shadow-lg transition-all duration-200"
-              size="default"
+              loading={addAboutLoading}
+              size="sm"
+              variant="outline"
             >
-              {addAboutLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Saving...</span>
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  <span>Save Changes</span>
-                </>
-              )}
+              {!addAboutLoading && <Save />}
+              Save Changes
             </Button>
           )}
         </div>
-        {!isLoading && (aboutData as { data?: { updatedAt?: string } } | undefined)?.data?.updatedAt && (
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/50 border border-border/50 text-sm">
-            <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="text-muted-foreground">Last updated</span>
-            <span className="font-semibold text-foreground">
-              {formatDateForDisplay((aboutData as { data?: { updatedAt?: string } })?.data?.updatedAt as string)}
-            </span>
-          </div>
-        )}
       </div>
 
       {isLoading ? (

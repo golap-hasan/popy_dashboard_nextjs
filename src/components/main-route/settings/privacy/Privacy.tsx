@@ -8,7 +8,7 @@ import PageLayout from "@/layout/PageLayout";
 import { ErrorToast, SuccessToast, formatDateForDisplay } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
-import { Clock, Save, Loader2 } from "lucide-react";
+import { Save } from "lucide-react";
 import LegalEditorSkeleton from "@/components/skeleton/LegalSkeleton";
 import {
   useGetLegalPageQuery,
@@ -114,47 +114,40 @@ const Privacy = () => {
 
   return (
     <PageLayout>
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <Title title="Privacy Policy" />
+      <div className="mb-2">
+        <div className="flex justify-between">
+          <div className="flex flex-col items-start gap-3">
+            <Title title="Privacy Policy" />
+            <div>
+              {!isLoading &&
+                (privacyData as { data?: { updatedAt?: string } } | undefined)
+                  ?.data?.updatedAt && (
+                  <div className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    <span>•</span>
+                    <span>Updated</span>
+                    <span className="font-medium text-foreground">
+                      {formatDateForDisplay(
+                        (privacyData as { data?: { updatedAt?: string } })?.data
+                          ?.updatedAt as string
+                      )}
+                    </span>
+                  </div>
+                )}
+            </div>
+          </div>
           {!isLoading && (
             <Button
               disabled={addPrivacyPolicyLoading}
               onClick={handleSubmit}
-              className="min-w-[120px] gap-2 shadow-md hover:shadow-lg transition-all duration-200"
-              size="default"
+              loading={addPrivacyPolicyLoading}
+              size="sm"
+              variant="outline"
             >
-              {addPrivacyPolicyLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Saving...</span>
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  <span>Save Changes</span>
-                </>
-              )}
+              {!addPrivacyPolicyLoading && <Save />}
+              Save Changes
             </Button>
           )}
         </div>
-        {!isLoading &&
-          (privacyData as { data?: { updatedAt?: string } } | undefined)?.data
-            ?.updatedAt && (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-muted/50 border border-border/50 text-sm">
-              <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="text-muted-foreground">Last updated</span>
-              <span className="font-semibold text-foreground">
-                {formatDateForDisplay(
-                  (
-                    privacyData as {
-                      data?: { updatedAt?: string };
-                    }
-                  )?.data?.updatedAt as string
-                )}
-              </span>
-            </div>
-          )}
       </div>
 
       {isLoading ? (
