@@ -79,7 +79,7 @@ const Dashboard = () => {
     );
   }
 
-  if (!isError || !data) {
+  if (isError || !data) {
     return (
       <div className="h-[80vh] flex gap-4 items-center justify-center">
         <CloudAlert className="size-10 text-red-400" />
