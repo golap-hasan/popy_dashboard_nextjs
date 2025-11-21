@@ -61,10 +61,10 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
     }, [pathname, isSidebarOpen, setIsSidebarOpen]);
 
     const handleLogout = () => {
+        router.push("/auth/login");
         dispatch(setAdmin(null));
         dispatch(setAccessToken(null));
         localStorage.removeItem("accessToken");
-        router.push("/auth/login");
     };
 
     const navItems = useMemo<SidebarNavItem[]>(() => [

@@ -85,7 +85,7 @@ const authApi = baseApi.injectEndpoints({
           const accessToken: string | undefined = data?.data?.accessToken;
           const decoded = accessToken ? jwtDecode<DecodedToken>(accessToken) : null;
 
-          if (decoded?.role === "ADMIN") {
+          if (decoded?.role === "ADMIN" || decoded?.role === "SUPER_ADMIN") {
             if (accessToken) {
               dispatch(setAccessToken(accessToken));
               // Extract admin data from JWT payload (exclude iat, exp)
