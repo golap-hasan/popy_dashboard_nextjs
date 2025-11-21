@@ -152,7 +152,7 @@ const OrderViewModal = ({ order }: { order: Order }) => {
                     </h3>
                     <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center">
                       <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border self-center sm:self-start">
-                        <AvatarImage src="" alt={order.user?.name} />
+                        <AvatarImage src={order.user?.image} alt={order.user?.name} />
                         <AvatarFallback className="text-sm sm:text-lg font-semibold">
                           {getInitials(order.user?.name)}
                         </AvatarFallback>

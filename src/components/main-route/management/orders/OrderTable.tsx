@@ -86,7 +86,7 @@ const OrderTable = ({ data, page, limit }: { data: Order[]; page: number; limit:
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="border w-10 h-10">
-                        <AvatarImage src="" alt={order?.user?.name} />
+                        <AvatarImage src={order?.user?.image} alt={order?.user?.name} />
                         <AvatarFallback>{getInitials(order?.user?.name)}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">

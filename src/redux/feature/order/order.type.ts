@@ -4,6 +4,7 @@ export interface Order {
     name: string;
     phone: string;
     email: string;
+    image: string;
   };
   deliveryCharge: number;
   finalAmount: number;
