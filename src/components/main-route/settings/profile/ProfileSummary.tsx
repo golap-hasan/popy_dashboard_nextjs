@@ -1,24 +1,35 @@
 "use client"
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getInitials } from "@/lib/utils";
 import { Camera, ShieldCheck, User2 } from "lucide-react";
 import { useRef } from "react";
-import { ErrorToast } from "@/lib/utils";
+import { ErrorToast, SuccessToast } from "@/lib/utils";
 import ProfileSummarySkeleton from "@/components/skeleton/ProfileSummarySkeleton";
+import type { RootState } from "@/redux/store";
+import { useUpdateProfileImageMutation } from "@/redux/feature/auth/authApi";
 
-const FALLBACK_ADMIN = {
-  name: "Golap Hasan",
-  email: "admin@popy.com",
-  profile_image: "https://i.pravatar.cc/150?img=32",
+type ProfileSummaryProps = {
+  previewUrl: string | null;
+  pendingImage: File | null;
+  isLoading: boolean;
+  isError: boolean;
+  onSelectImage?: (file: File, previewUrl: string) => void;
+  onClearPending?: () => void;
 };
 
-const ProfileSummary = ({ previewUrl, onSelectImage, isLoading, isError, pendingImage }: any) => {
-  // const { t } = useTranslation('profile');
-  // const storedAdmin = useSelector((state) => state.auth.admin);
-  const admin = FALLBACK_ADMIN;
+const ProfileSummary = ({ 
+  previewUrl, 
+  onSelectImage, 
+  isLoading, 
+  isError, 
+  pendingImage, 
+  onClearPending 
+}: ProfileSummaryProps) => {
+  const admin = useSelector((state: RootState) => state.auth.admin);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [updateProfileImage, { isLoading: uploadingImage }] = useUpdateProfileImageMutation();
 
   const onPickImage = () => {
     fileInputRef.current?.click();
@@ -34,6 +45,20 @@ const ProfileSummary = ({ previewUrl, onSelectImage, isLoading, isError, pending
       ErrorToast('Failed to select image');
     }
   };
+
+  const onUploadImage = async () => {
+    if (!pendingImage) return;
+    try {
+      const fd = new FormData();
+      fd.append('user', pendingImage);
+      await updateProfileImage(fd).unwrap();
+      SuccessToast('Image updated successfully.');
+      onClearPending?.();
+    } catch (e: unknown) {
+      ErrorToast((e as { data?: { message?: string } })?.data?.message || 'Failed to update image.');
+    }
+  };
+
   return (
     <div className="space-y-4">
       <Card className="overflow-hidden py-0">
@@ -48,8 +73,8 @@ const ProfileSummary = ({ previewUrl, onSelectImage, isLoading, isError, pending
                 <>
                   <div className="relative">
                     <Avatar className="h-20 w-20 border">
-                      <AvatarImage src={previewUrl || admin?.profile_image} alt={admin?.name || 'User'} />
-                      <AvatarFallback>{getInitials(admin?.name)}</AvatarFallback>
+                      <AvatarImage src={previewUrl || (admin?.image ?? "")} alt={admin?.name || 'User'} />
+                      <AvatarFallback>{getInitials(admin?.name as string)}</AvatarFallback>
                     </Avatar>
                     <button
                       type="button"
@@ -73,6 +98,25 @@ const ProfileSummary = ({ previewUrl, onSelectImage, isLoading, isError, pending
                       </span>
                     )}
                   </div>
+                  {pendingImage && (
+                    <div className="flex items-center gap-3 text-xs">
+                      <button
+                        type="button"
+                        className="underline"
+                        onClick={onUploadImage}
+                        disabled={uploadingImage}
+                      >
+                        {uploadingImage ? 'Uploading…' : 'Upload image'}
+                      </button>
+                      <button
+                        type="button"
+                        className="underline"
+                        onClick={() => onClearPending?.()}
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  )}
                   <div>
                     <p className="font-semibold text-base">{admin?.name || 'User'}</p>
                     <p className="text-xs text-muted-foreground">{admin?.email || ""}</p>

@@ -6,11 +6,12 @@ import EditProfileForm from "./EditProfileForm";
 import ChangePasswordForm from "./ChangePasswordForm";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Title from "@/components/ui/Title";
+import { useGetAdminProfileQuery } from "@/redux/feature/auth/authApi";
 
 const Profile = () => {
-  const [pendingImage, setPendingImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  // const { isLoading, isError } = useGetAdminProfileQuery();
+  const [pendingImage, setPendingImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { isLoading, isError } = useGetAdminProfileQuery(undefined);
 
   return (
     <Suspense
@@ -30,9 +31,9 @@ const Profile = () => {
             <ProfileSummary
               pendingImage={pendingImage}
               previewUrl={previewUrl}
-              isLoading={false}
-              isError={false}
-              onSelectImage={(file: any, preview: any) => {
+              isLoading={isLoading}
+              isError={isError}
+              onSelectImage={(file: File, preview: string) => {
                 setPendingImage(file);
                 setPreviewUrl(preview);
               }}
@@ -58,14 +59,8 @@ const Profile = () => {
                 <div className="p-4">
                   <TabsContent value="profile">
                     <EditProfileForm
-                      pendingImage={pendingImage}
-                      isLoading={false}
-                      isError={false}
-                      onClearPending={() => {
-                        if (previewUrl) URL.revokeObjectURL(previewUrl);
-                        setPendingImage(null);
-                        setPreviewUrl(null);
-                      }}
+                      isLoading={isLoading}
+                      isError={isError}
                     />
                   </TabsContent>
                   <TabsContent value="password">

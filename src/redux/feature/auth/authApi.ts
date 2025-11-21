@@ -42,8 +42,8 @@ const authApi = baseApi.injectEndpoints({
     // UPDATE PROFILE IMAGE
     updateProfileImage: builder.mutation({
       query: (data) => ({
-        url: "/user/update-user-data",
-        method: "PATCH",
+        url: "/user/update-profile-photo",
+        method: "PUT",
         body: data,
       }),
       invalidatesTags: ["PROFILE"],
