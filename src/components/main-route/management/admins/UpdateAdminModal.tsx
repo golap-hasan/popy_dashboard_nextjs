@@ -26,12 +26,13 @@ import { Input } from "@/components/ui/input";
 import { Pencil } from "lucide-react";
 import type { Admin } from "@/redux/feature/admin/admin.types";
 import { useUpdateAdminMutation } from "@/redux/feature/admin/adminApi";
-import { ErrorToast, SuccessToast } from "@/lib/utils";
+import { ErrorToast, InfoToast, SuccessToast } from "@/lib/utils";
+import { getDirtyData } from "@/lib/form-helpers";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters."),
   email: z.string().email("Please enter a valid email address."),
-  password: z.string().min(6, "Password must be at least 6 characters."),
+  password: z.string().optional(),
 });
 
 interface AddAdminModalProps {
@@ -64,14 +65,28 @@ const AddAdminModal = ({ admin }: AddAdminModalProps) => {
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      // Step 1: Get dirty data
+      const payload = getDirtyData(values, form.formState.dirtyFields);
+
+      // Step 2: Check if there are any changes
+      if (Object.keys(payload).length === 0) {
+        InfoToast("No changes to update.");
+        return;
+      }
+      // Step 3: Update admin
       await updateAdmin({
         id: admin._id,
-        data: values,
+        data: payload,
       }).unwrap();
       SuccessToast("Update Successfully");
+      // Step 4: Reset form and close dialog
+      form.reset();
       setOpen(false);
     } catch (error) {
-      ErrorToast((error as { data?: { message?: string } })?.data?.message || "Failed to update admin.");
+      ErrorToast(
+        (error as { data?: { message?: string } })?.data?.message ||
+          "Failed to update admin."
+      );
     }
   };
 
@@ -91,7 +106,10 @@ const AddAdminModal = ({ admin }: AddAdminModalProps) => {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"
