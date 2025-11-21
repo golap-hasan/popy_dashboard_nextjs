@@ -9,7 +9,7 @@ const authApi = baseApi.injectEndpoints({
     // GET ADMIN PROFILE
     getAdminProfile: builder.query({
       query: () => ({
-        url: "/auth/profile",
+        url: "/user/profile",
         method: "GET",
       }),
       providesTags: ["PROFILE"],
@@ -29,10 +29,20 @@ const authApi = baseApi.injectEndpoints({
       },
     }),
 
-    // UPDATE ADMIN PROFILE
+    // UPDATE ADMIN PROFILE INFO
     updateAdminProfile: builder.mutation({
       query: (data) => ({
-        url: "/auth/edit-profile",
+        url: "/user/update-user-data",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["PROFILE"],
+    }),
+
+    // UPDATE PROFILE IMAGE
+    updateProfileImage: builder.mutation({
+      query: (data) => ({
+        url: "/user/update-user-data",
         method: "PATCH",
         body: data,
       }),
@@ -43,7 +53,7 @@ const authApi = baseApi.injectEndpoints({
     changePassword: builder.mutation({
       query: (data) => {
         return {
-          url: "/auth/change-password",
+          url: "/user/change-password",
           method: "PATCH",
           body: data,
         };
@@ -212,6 +222,7 @@ const authApi = baseApi.injectEndpoints({
 export const {
   useGetAdminProfileQuery,
   useUpdateAdminProfileMutation,
+  useUpdateProfileImageMutation,
   useLoginMutation,
   useForgetPasswordMutation,
   useVerifyOTPForResetPasswordMutation,

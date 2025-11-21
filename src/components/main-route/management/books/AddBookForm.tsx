@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import PageLayout from "@/layout/PageLayout";
 import Title from "@/components/ui/Title";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Sparkles, X } from "lucide-react";
+import { CheckCircle2, Info, Sparkles, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -639,10 +639,13 @@ const AddBookForm = () => {
                               {...field}
                             />
                           </FormControl>
-                          <FormDescription className="text-amber-400">
-                            Note: Enter specifications as "Label: Value" pairs,
-                            one per line. These will be parsed and sent as
-                            structured data.
+                          <FormDescription className="text-amber-400 flex items-center gap-1.5">
+                            <Info className="h-4 w-4"/>
+                            <span>
+                              Note: Enter specifications as "Label: Value"
+                              pairs, one per line. These will be parsed and sent
+                              as structured data.
+                            </span>
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
