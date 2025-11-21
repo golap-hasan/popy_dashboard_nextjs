@@ -13,6 +13,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import PageLayout from "@/layout/PageLayout";
@@ -23,15 +30,26 @@ import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import {
-  useCreateBookMutation,
-} from "@/redux/feature/book/bookApi";
+import { useCreateBookMutation } from "@/redux/feature/book/bookApi";
 import { bookFormSchema } from "./book.schema";
 import { BookUpdatePayload } from "@/redux/feature/book/book.type";
 import { ErrorToast, SuccessToast } from "@/lib/utils";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import useSmartFetchHook from "@/hooks/useSmartFetchHook";
+import {
+  Category,
+  CategoryQueryParams,
+} from "@/redux/feature/category/category.type";
+import { useGetAllCategoryQuery } from "@/redux/feature/category/categoryApi";
 
-const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const AddBookForm = () => {
   const router = useRouter();
@@ -64,6 +82,10 @@ const AddBookForm = () => {
     },
   });
 
+  const { data, isLoading, isError } = useSmartFetchHook<
+    CategoryQueryParams,
+    Category
+  >(useGetAllCategoryQuery, {});
   const [createBook, { isLoading: isCreating }] = useCreateBookMutation();
 
   const addHighlight = () => {
@@ -137,28 +159,28 @@ const AddBookForm = () => {
           : undefined,
         tag: values.tag,
         description: values.description || "",
-        highlights: highlights, // Use the highlights state directly
+        highlights: highlights,
         specs: values.specs
           ? values.specs
-            .split("\n")
-            .map((line) => {
-              const [label, ...valueParts] = line.split(":");
-              const value = valueParts.join(":").trim();
-              return { label: label.trim(), value };
-            })
-            .filter((spec) => spec.label && spec.value)
+              .split("\n")
+              .map((line) => {
+                const [label, ...valueParts] = line.split(":");
+                const value = valueParts.join(":").trim();
+                return { label: label.trim(), value };
+              })
+              .filter((spec) => spec.label && spec.value)
           : undefined,
         aboutAuthor:
           values.aboutAuthorBio || values.aboutAuthorAchievements
             ? {
-              bio: values.aboutAuthorBio || "",
-              achievements: values.aboutAuthorAchievements
-                ? values.aboutAuthorAchievements
-                  .split("\n")
-                  .map((a) => a.trim())
-                  .filter(Boolean)
-                : [],
-            }
+                bio: values.aboutAuthorBio || "",
+                achievements: values.aboutAuthorAchievements
+                  ? values.aboutAuthorAchievements
+                      .split("\n")
+                      .map((a) => a.trim())
+                      .filter(Boolean)
+                  : [],
+              }
             : undefined,
       };
 
@@ -173,7 +195,9 @@ const AddBookForm = () => {
       SuccessToast("Book created successfully.");
       router.push("/management/books");
     } catch (err) {
-      const msg = (err as { data?: { message?: string } })?.data?.message || "Failed to create book.";
+      const msg =
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Failed to create book.";
       ErrorToast(msg);
     }
   };
@@ -194,19 +218,23 @@ const AddBookForm = () => {
                   Launch a standout title in minutes
                 </h2>
                 <p className="text-muted-foreground">
-                  Provide crisp details, highlight what makes this book special, and publish a polished listing
-                  for your readers without leaving the dashboard.
+                  Provide crisp details, highlight what makes this book special,
+                  and publish a polished listing for your readers without
+                  leaving the dashboard.
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" /> Live preview ready
+                  <CheckCircle2 className="h-4 w-4 text-primary" /> Live preview
+                  ready
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" /> Optimized for search
+                  <CheckCircle2 className="h-4 w-4 text-primary" /> Optimized
+                  for search
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" /> Team collaboration friendly
+                  <CheckCircle2 className="h-4 w-4 text-primary" /> Team
+                  collaboration friendly
                 </div>
               </div>
             </div>
@@ -214,7 +242,10 @@ const AddBookForm = () => {
         </section>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-6"
+          >
             <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
               <div className="space-y-6">
                 <Card className="shadow-sm">
@@ -223,10 +254,14 @@ const AddBookForm = () => {
                       <div className="space-y-1">
                         <CardTitle>Core details</CardTitle>
                         <CardDescription>
-                          The essentials customers see first across search, listings, and recommendations.
+                          The essentials customers see first across search,
+                          listings, and recommendations.
                         </CardDescription>
                       </div>
-                      <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs uppercase tracking-wide">
+                      <Badge
+                        variant="secondary"
+                        className="rounded-full px-3 py-1 text-xs uppercase tracking-wide"
+                      >
                         Required
                       </Badge>
                     </div>
@@ -240,7 +275,10 @@ const AddBookForm = () => {
                           <FormItem>
                             <FormLabel>Title</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter book title" {...field} />
+                              <Input
+                                placeholder="Enter book title"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -253,7 +291,10 @@ const AddBookForm = () => {
                           <FormItem>
                             <FormLabel>Subtitle</FormLabel>
                             <FormControl>
-                              <Input placeholder="Optional subtitle" {...field} />
+                              <Input
+                                placeholder="Optional subtitle"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -266,7 +307,10 @@ const AddBookForm = () => {
                           <FormItem>
                             <FormLabel>Author</FormLabel>
                             <FormControl>
-                              <Input placeholder="Primary author name" {...field} />
+                              <Input
+                                placeholder="Primary author name"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -291,12 +335,40 @@ const AddBookForm = () => {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Category</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Play Group & Nursery"
-                                {...field}
-                              />
-                            </FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a category" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {isLoading ? (
+                                  <div className="p-2 text-center text-sm text-muted-foreground">
+                                    Loading categories...
+                                  </div>
+                                ) : isError ? (
+                                  <div className="p-2 text-center text-sm text-destructive">
+                                    Failed to load categories
+                                  </div>
+                                ) : data?.length > 0 ? (
+                                  data.map((category) => (
+                                    <SelectItem
+                                      key={category._id}
+                                      value={category.name}
+                                    >
+                                      {category.name}
+                                    </SelectItem>
+                                  ))
+                                ) : (
+                                  <div className="p-2 text-center text-sm text-muted-foreground">
+                                    No categories found
+                                  </div>
+                                )}
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -376,7 +448,10 @@ const AddBookForm = () => {
                           <FormItem>
                             <FormLabel>Tag</FormLabel>
                             <FormControl>
-                              <Input placeholder="e.g., Best seller" {...field} />
+                              <Input
+                                placeholder="e.g., Best seller"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -423,11 +498,13 @@ const AddBookForm = () => {
                           <button
                             type="button"
                             onClick={() => {
-                              const input = document.createElement('input');
-                              input.type = 'file';
-                              input.accept = 'image/*';
+                              const input = document.createElement("input");
+                              input.type = "file";
+                              input.accept = "image/*";
                               input.onchange = (event) => {
-                                const file = (event.target as HTMLInputElement).files?.[0] || null;
+                                const file =
+                                  (event.target as HTMLInputElement)
+                                    .files?.[0] || null;
                                 setPendingImage(file);
                               };
                               input.click();
@@ -440,7 +517,8 @@ const AddBookForm = () => {
                             <div className="space-y-1">
                               <p className="font-medium">Upload cover image</p>
                               <p className="text-muted-foreground text-sm">
-                                Add a high-resolution image to showcase the book.
+                                Add a high-resolution image to showcase the
+                                book.
                               </p>
                             </div>
                             <span className="text-muted-foreground text-xs">
@@ -450,7 +528,8 @@ const AddBookForm = () => {
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Optional: upload a high-resolution image to showcase the book.
+                        Optional: upload a high-resolution image to showcase the
+                        book.
                       </p>
                     </div>
                   </CardContent>
@@ -459,7 +538,10 @@ const AddBookForm = () => {
                 <Card className="shadow-sm">
                   <CardHeader className="space-y-3">
                     <CardTitle>Storytelling</CardTitle>
-                    <CardDescription>Help readers instantly connect with your book’s voice and themes.</CardDescription>
+                    <CardDescription>
+                      Help readers instantly connect with your book’s voice and
+                      themes.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <FormField
@@ -527,7 +609,8 @@ const AddBookForm = () => {
                       </div>
 
                       <FormDescription>
-                        Add key selling points and features. Each highlight will be displayed as a separate item.
+                        Add key selling points and features. Each highlight will
+                        be displayed as a separate item.
                       </FormDescription>
                     </div>
                   </CardContent>
@@ -556,8 +639,10 @@ const AddBookForm = () => {
                               {...field}
                             />
                           </FormControl>
-                          <FormDescription>
-                            Note: Enter specifications as "Label: Value" pairs, one per line. These will be parsed and sent as structured data.
+                          <FormDescription className="text-amber-400">
+                            Note: Enter specifications as "Label: Value" pairs,
+                            one per line. These will be parsed and sent as
+                            structured data.
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -622,14 +707,22 @@ const AddBookForm = () => {
                   <CardHeader>
                     <CardTitle>Finalize & publish</CardTitle>
                     <CardDescription>
-                      Double-check key details before sharing the book with your audience.
+                      Double-check key details before sharing the book with your
+                      audience.
                     </CardDescription>
                   </CardHeader>
                   <CardFooter className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm text-muted-foreground">
-                      Need to gather assets later? You can save a draft and revisit at any time.
+                      Need to gather assets later? You can save a draft and
+                      revisit at any time.
                     </p>
-                    <Button type="submit" size="lg" className="gap-2" disabled={isCreating}>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="gap-2"
+                      disabled={isCreating}
+                      loading={isCreating}
+                    >
                       {isCreating ? "Creating..." : "Publish book"}
                     </Button>
                   </CardFooter>
@@ -640,7 +733,10 @@ const AddBookForm = () => {
                 <Card className="border-dashed shadow-none">
                   <CardHeader className="space-y-2">
                     <CardTitle>Quality checklist</CardTitle>
-                    <CardDescription>Confirm everything needed for an exceptional catalog entry.</CardDescription>
+                    <CardDescription>
+                      Confirm everything needed for an exceptional catalog
+                      entry.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm">
                     {[
@@ -650,7 +746,10 @@ const AddBookForm = () => {
                       "Specs mention page count and format",
                       "Author bio lists notable achievements",
                     ].map((item) => (
-                      <div key={item} className="flex items-start gap-3 rounded-lg border border-primary/15 bg-primary/5 p-3">
+                      <div
+                        key={item}
+                        className="flex items-start gap-3 rounded-lg border border-primary/15 bg-primary/5 p-3"
+                      >
                         <CheckCircle2 className="mt-0.5 h-4 w-4 text-primary" />
                         <span>{item}</span>
                       </div>
@@ -661,7 +760,9 @@ const AddBookForm = () => {
                 <Card className="shadow-sm">
                   <CardHeader className="space-y-2">
                     <CardTitle>Formatting tips</CardTitle>
-                    <CardDescription>Short reminders for consistent, on-brand copy.</CardDescription>
+                    <CardDescription>
+                      Short reminders for consistent, on-brand copy.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm text-muted-foreground">
                     <p>
@@ -671,8 +772,8 @@ const AddBookForm = () => {
                     </p>
                     <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4 text-primary">
                       <p className="text-sm font-medium">
-                        Tip: Paste markdown-friendly specs to automatically convert to structured displays on the
-                        storefront.
+                        Tip: Paste markdown-friendly specs to automatically
+                        convert to structured displays on the storefront.
                       </p>
                     </div>
                   </CardContent>

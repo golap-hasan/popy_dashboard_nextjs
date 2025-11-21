@@ -28,13 +28,9 @@ import { SuccessToast, ErrorToast } from "@/lib/utils";
 import { Loader } from "lucide-react";
 
 const CategoryTable = ({
-  data,
-  page,
-  limit,
+  data
 }: {
   data: Category[];
-  page: number;
-  limit: number;
 }) => {
   const [deleteCategory, { isLoading }] = useDeleteCategoryMutation();
 
@@ -70,7 +66,7 @@ const CategoryTable = ({
         <TableBody>
           {data?.map((category: Category, index: number) => (
             <TableRow key={category._id}>
-              <TableCell>{(page - 1) * limit + index + 1}</TableCell>
+              <TableCell>{ index + 1}</TableCell>
               <TableCell className="min-w-[220px]">
                 <span className="font-medium whitespace-nowrap">
                   {category.name}

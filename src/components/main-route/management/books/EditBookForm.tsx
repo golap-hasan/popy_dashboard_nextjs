@@ -17,6 +17,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import PageLayout from "@/layout/PageLayout";
 import Title from "@/components/ui/Title";
@@ -38,6 +45,12 @@ import {
 import { bookFormSchema } from "./book.schema";
 import { Book, BookUpdatePayload } from "@/redux/feature/book/book.type";
 import { ErrorToast, SuccessToast } from "@/lib/utils";
+import {
+  Category,
+  CategoryQueryParams,
+} from "@/redux/feature/category/category.type";
+import { useGetAllCategoryQuery } from "@/redux/feature/category/categoryApi";
+import useSmartFetchHook from "@/hooks/useSmartFetchHook";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -77,6 +90,15 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
     },
   });
 
+  const {
+    data: categories,
+    isLoading: categoryLoading,
+    isError: categoryError,
+  } = useSmartFetchHook<CategoryQueryParams, Category>(
+    useGetAllCategoryQuery,
+    {}
+  );
+
   const { data, isLoading, isError } = useGetSingleBookQuery(slug);
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
 
@@ -104,7 +126,6 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
   // Initialize highlights when book data loads
   useEffect(() => {
     if (book?.highlights && Array.isArray(book.highlights)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHighlights(book.highlights);
     }
   }, [book?.highlights]);
@@ -122,8 +143,8 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
         typeof book.category === "object" && book.category !== null
           ? (book.category as { name: string }).name || ""
           : typeof book.category === "string"
-            ? book.category
-            : "",
+          ? book.category
+          : "",
       quantity: book.quantity !== null ? String(book.quantity) : "",
       price: book.price !== null ? String(book.price) : "",
       originalPrice:
@@ -134,15 +155,30 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
       description: book.description || "",
       highlights: "", // Not used anymore, using separate state
       specs: book.specs
-        ? book.specs
-          .map((spec) => `${spec.label}: ${spec.value}`)
-          .join("\n")
+        ? book.specs.map((spec) => `${spec.label}: ${spec.value}`).join("\n")
         : "",
       aboutAuthorBio: book.aboutAuthor?.bio || "",
       aboutAuthorAchievements: Array.isArray(book.aboutAuthor?.achievements)
         ? book.aboutAuthor?.achievements.join("\n")
         : "",
     });
+  }, [book, form]);
+
+  // Ensure category form value is set from book if still empty
+  useEffect(() => {
+    if (!book) return;
+    const current = form.getValues("category");
+    if (!current) {
+      const name =
+        typeof book.category === "object" && book.category !== null
+          ? (book.category as { name: string }).name || ""
+          : typeof book.category === "string"
+          ? book.category
+          : "";
+      if (name) {
+        form.setValue("category", name, { shouldDirty: false, shouldTouch: false });
+      }
+    }
   }, [book, form]);
 
   const config = useMemo(() => {
@@ -201,25 +237,25 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
         highlights: highlights, // Use the highlights state directly
         specs: values.specs
           ? values.specs
-            .split("\n")
-            .map((line) => {
-              const [label, ...valueParts] = line.split(":");
-              const value = valueParts.join(":").trim();
-              return { label: label.trim(), value };
-            })
-            .filter((spec) => spec.label && spec.value)
+              .split("\n")
+              .map((line) => {
+                const [label, ...valueParts] = line.split(":");
+                const value = valueParts.join(":").trim();
+                return { label: label.trim(), value };
+              })
+              .filter((spec) => spec.label && spec.value)
           : undefined,
         aboutAuthor:
           values.aboutAuthorBio || values.aboutAuthorAchievements
             ? {
-              bio: values.aboutAuthorBio || "",
-              achievements: values.aboutAuthorAchievements
-                ? values.aboutAuthorAchievements
-                  .split("\n")
-                  .map((a) => a.trim())
-                  .filter(Boolean)
-                : [],
-            }
+                bio: values.aboutAuthorBio || "",
+                achievements: values.aboutAuthorAchievements
+                  ? values.aboutAuthorAchievements
+                      .split("\n")
+                      .map((a) => a.trim())
+                      .filter(Boolean)
+                  : [],
+              }
             : undefined,
       };
 
@@ -344,18 +380,57 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
                       <FormField
                         control={form.control}
                         name="category"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Category</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Play Group & Nursery"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        render={({ field }) => {
+                          const bookCategoryName =
+                            typeof book?.category === "object" && book?.category !== null
+                              ? (book?.category as { name: string }).name
+                              : typeof book?.category === "string"
+                              ? (book?.category as string)
+                              : "";
+                          const selectedValue = field.value || bookCategoryName || undefined;
+                          const hasCurrent = Array.isArray(categories)
+                            ? categories.some((c) => c.name === selectedValue)
+                            : false;
+                          return (
+                            <FormItem>
+                              <FormLabel>Category</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                value={selectedValue}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select a category" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {selectedValue && !hasCurrent && (
+                                    <SelectItem value={selectedValue}>{selectedValue}</SelectItem>
+                                  )}
+                                  {categoryLoading ? (
+                                    <div className="p-2 text-center text-sm text-muted-foreground">
+                                      Loading categories...
+                                    </div>
+                                  ) : categoryError ? (
+                                    <div className="p-2 text-center text-sm text-destructive">
+                                      Failed to load categories
+                                    </div>
+                                  ) : Array.isArray(categories) && categories.length > 0 ? (
+                                    categories.map((category) => (
+                                      <SelectItem
+                                        key={category._id}
+                                        value={category.name}
+                                      >
+                                        {category.name}
+                                      </SelectItem>
+                                    ))
+                                  ) : null}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
                       />
                       <FormField
                         control={form.control}
@@ -662,7 +737,9 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
                             />
                           </FormControl>
                           <FormDescription>
-                            Enter specifications as "Label: Value" pairs, one per line. These will be parsed and sent as structured data.
+                            Enter specifications as "Label: Value" pairs, one
+                            per line. These will be parsed and sent as
+                            structured data.
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -755,6 +832,7 @@ const EditBookForm = ({ slug, id }: EditBookFormProps) => {
                         size="lg"
                         className="gap-2"
                         disabled={isUpdating}
+                        loading={isUpdating}
                       >
                         {isUpdating ? "Updating..." : "Update book"}
                       </Button>

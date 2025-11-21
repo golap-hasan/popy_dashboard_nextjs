@@ -8,13 +8,19 @@ export type AboutAuthor = {
   achievements: string[];
 };
 
+export type BookCategoryRef = {
+  _id: string;
+  name: string;
+  slug: string;
+};
+
 export type Book = {
   _id: string;
   title: string;
   subtitle?: string;
   author: string;
   slug: string;
-  category: string; // category id
+  category: string | BookCategoryRef;
   quantity: number;
   price: number;
   originalPrice?: number;
