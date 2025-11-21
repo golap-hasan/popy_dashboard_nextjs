@@ -2,7 +2,7 @@
 
 import { baseApi } from "../baseApi";
 import type { ApiListResponse } from "@/hooks/useSmartFetchHook";
-import { Contact } from "./lega.type";
+import { Contact } from "./legal.type";
 
 const legalApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

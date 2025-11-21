@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDateForDisplay } from "@/lib/utils";
-import { Contact } from "@/redux/feature/legal/lega.type";
+import { Contact } from "@/redux/feature/legal/legal.type";
 import {
   Tooltip,
   TooltipContent,
