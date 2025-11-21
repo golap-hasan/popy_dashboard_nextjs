@@ -1,16 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { baseApi } from "../baseApi";
+import type { ApiListResponse } from "@/hooks/useSmartFetchHook";
+import { Contact } from "./lega.type";
 
 const legalApi = baseApi.injectEndpoints({
-  endpoints: (builder: any) => ({
-    
+  endpoints: (builder) => ({
     // GET LEGAL PAGES
     getLegalPage: builder.query({
       query: (type: string) => ({
         url: `/page/retrieve/${type}`,
         method: "GET",
       }),
+      providesTags: ["LEGAL"],
+    }),
+
+    // GET CUSTOMER HELP (supports pagination and search)
+    getCustomerHelp: builder.query<ApiListResponse<Contact>, { page?: number; limit?: number; searchTerm?: string }>({
+      query: (args: any) => {
+        const params = new URLSearchParams();
+        if (args) {
+          Object.entries(args).forEach(([key, value]) => {
+            if (value) {
+              params.append(key, value as string);
+            }
+          });
+        }
+        return {
+          url: "/contact",
+          method: "GET",
+          params,
+        };
+      },
       providesTags: ["LEGAL"],
     }),
 
@@ -26,4 +47,8 @@ const legalApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetLegalPageQuery, useAddOrUpdateLegalPageMutation } = legalApi;
+export const {
+  useGetLegalPageQuery,
+  useGetCustomerHelpQuery,
+  useAddOrUpdateLegalPageMutation,
+} = legalApi;

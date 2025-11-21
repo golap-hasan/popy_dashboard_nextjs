@@ -11,8 +11,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-// import { Button } from '@/components/ui/button';
-// import { Eye } from 'lucide-react';
 import { User } from '@/redux/feature/user/user.type';
 
 interface UsersTableProps {
