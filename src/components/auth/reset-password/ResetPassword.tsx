@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,11 +15,9 @@ const resetPasswordSchema = z
     newPassword: z
       .string()
       .min(6, { message: "New password must be at least 6 characters." }),
-    confirmNewPassword: z
-      .string()
-      .min(6, {
-        message: "Confirm new password must be at least 6 characters.",
-      }),
+    confirmNewPassword: z.string().min(6, {
+      message: "Confirm new password must be at least 6 characters.",
+    }),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "Passwords don't match.",
@@ -33,7 +31,8 @@ const ResetPassword = () => {
     setShowNewPassword(!showNewPassword);
   const toggleConfirmNewPasswordVisibility = () =>
     setShowConfirmNewPassword(!showConfirmNewPassword);
-  const token = typeof window !== "undefined" ? localStorage.getItem("FPT") : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("FPT") : null;
 
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
@@ -46,11 +45,13 @@ const ResetPassword = () => {
     mode: "onChange",
   });
 
-  const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
-    resetPassword({
-      resetPasswordToken: token,
-      newPassword: data.newPassword
-    });
+  const onSubmit = async (data: z.infer<typeof resetPasswordSchema>) => {
+    try {
+      await resetPassword({
+        resetPasswordToken: token,
+        newPassword: data.newPassword,
+      }).unwrap();
+    } catch {}
   };
 
   return (

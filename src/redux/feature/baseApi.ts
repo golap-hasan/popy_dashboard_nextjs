@@ -28,12 +28,20 @@ const baseQuery: BaseQueryFn<
   const result = await rawBaseQuery(args, api, extraOptions);
   const status: number | string | undefined = result?.error?.status;
   if (status === 401 || status === 403) {
+    // Determine request URL to avoid redirecting on login attempts
+    const requestUrl = typeof args === "string" ? args : (args as FetchArgs)?.url;
+    const isLoginEndpoint = typeof requestUrl === "string" && requestUrl.includes("/user/signin");
+    const isOnLoginPage = typeof window !== "undefined" && window.location?.pathname?.startsWith("/auth/login");
+
     // Clear auth state
     api.dispatch(setAccessToken(null));
     api.dispatch(setAdmin(null));
-    localStorage.removeItem("accessToken");
-    // Redirect to login
     if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken");
+    }
+
+    // Only redirect to login if not already there and not during login request
+    if (typeof window !== "undefined" && !isLoginEndpoint && !isOnLoginPage) {
       window.location.href = "/auth/login";
     }
   }

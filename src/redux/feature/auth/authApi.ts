@@ -140,6 +140,12 @@ const authApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          if (typeof window !== "undefined") {
+            const token = data?.data?.resetPasswordToken as string | undefined;
+            if (token) {
+              localStorage.setItem("FPT", token);
+            }
+          }
           SuccessToast(data?.message);
         } catch (error) {
           const apiErr = (error as { error?: { data?: ApiErrorResponse } })?.error
@@ -184,9 +190,13 @@ const authApi = baseApi.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          SuccessToast(data?.message);
-          localStorage.removeItem("FPT");
-          window.location.href = "/auth/login";
+          SuccessToast(data?.message || "Password reset successful!");
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("FPT");
+            setTimeout(() => {
+              window.location.href = "/auth/login";
+            }, 1000);
+          }
         } catch (error) {
           const apiErr = (error as { error?: { data?: ApiErrorResponse } })?.error
             ?.data;
