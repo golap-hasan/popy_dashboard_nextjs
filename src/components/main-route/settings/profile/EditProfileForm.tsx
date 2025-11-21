@@ -50,7 +50,8 @@ type EditProfileFormProps = {
 
 const EditProfileForm = ({ isLoading, isError }: EditProfileFormProps) => {
   const admin = useSelector((state: RootState) => state.auth.admin);
-  const [updateProfile, { isLoading: updatingProfile }] = useUpdateAdminProfileMutation();
+  const [updateProfile, { isLoading: updatingProfile }] =
+    useUpdateAdminProfileMutation();
 
   const formSchema = getFormSchema();
 
@@ -209,7 +210,12 @@ const EditProfileForm = ({ isLoading, isError }: EditProfileFormProps) => {
             </section>
 
             <div className="pt-2">
-              <Button className="w-full" type="submit" disabled={updatingProfile}>
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={updatingProfile}
+                loading={updatingProfile}
+              >
                 Save changes
               </Button>
             </div>

@@ -32,6 +32,8 @@ const baseQuery: BaseQueryFn<
     const requestUrl = typeof args === "string" ? args : (args as FetchArgs)?.url;
     const isLoginEndpoint = typeof requestUrl === "string" && requestUrl.includes("/user/signin");
     const isOnLoginPage = typeof window !== "undefined" && window.location?.pathname?.startsWith("/auth/login");
+    const isChangePasswordEndpoint = typeof requestUrl === "string" && requestUrl.includes("/user/change-password");
+    const isOnChangePasswordPage = typeof window !== "undefined" && window.location?.pathname?.startsWith("/settings/profile");
 
     // Clear auth state
     api.dispatch(setAccessToken(null));
@@ -41,7 +43,7 @@ const baseQuery: BaseQueryFn<
     }
 
     // Only redirect to login if not already there and not during login request
-    if (typeof window !== "undefined" && !isLoginEndpoint && !isOnLoginPage) {
+    if (typeof window !== "undefined" && !isLoginEndpoint && !isOnLoginPage && !isChangePasswordEndpoint && !isOnChangePasswordPage) {
       window.location.href = "/auth/login";
     }
   }

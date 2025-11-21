@@ -15,19 +15,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useChangePasswordMutation } from "@/redux/feature/auth/authApi";
-import { ErrorToast } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-const getFormSchema = () => z
-  .object({
-    oldPassword: z.string().min(6, "password.validation.min_length"),
-    newPassword: z.string().min(6, "password.validation.min_length"),
-    confirmNewPassword: z.string().min(6, "password.validation.min_length"),
-  })
-  .refine((vals) => vals.newPassword === vals.confirmNewPassword, {
-    path: ["confirmNewPassword"],
-    message: "password.validation.no_match",
-  });
+const getFormSchema = () =>
+  z
+    .object({
+      oldPassword: z.string().min(6, "Minimum 6 characters"),
+      newPassword: z.string().min(6, "Minimum 6 characters"),
+      confirmNewPassword: z.string().min(6, "Minimum 6 characters"),
+    })
+    .refine((vals) => vals.newPassword === vals.confirmNewPassword, {
+      path: ["confirmNewPassword"],
+      message: "Passwords do not match",
+    });
 
 const ChangePasswordForm = () => {
   const [changePassword, { isLoading }] = useChangePasswordMutation();
@@ -48,13 +48,13 @@ const ChangePasswordForm = () => {
       await changePassword({
         oldPassword: values.oldPassword,
         newPassword: values.newPassword,
-        confirmNewPassword: values.confirmNewPassword,
       }).unwrap();
       form.reset();
-    } catch (err: any) {
-      console.log(err)
-      const msg = err?.data?.message || "password.toast.fail";
-      ErrorToast(msg);
+    } catch  {
+      // ErrorToast(
+      //   (error as { data?: { message?: string } })?.data?.message ||
+      //     "Failed to update profile."
+      // );
     }
   };
 
