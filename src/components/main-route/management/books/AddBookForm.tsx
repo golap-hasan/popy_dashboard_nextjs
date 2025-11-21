@@ -27,7 +27,7 @@ import Title from "@/components/ui/Title";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Info, Sparkles, X } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useCreateBookMutation } from "@/redux/feature/book/bookApi";
@@ -51,12 +51,20 @@ import { useGetAllCategoryQuery } from "@/redux/feature/category/categoryApi";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+
 const AddBookForm = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const [pendingImage, setPendingImage] = useState<File | null>(null);
   const [highlights, setHighlights] = useState<string[]>([]);
   const [currentHighlight, setCurrentHighlight] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
 
   const formSchema = bookFormSchema;
 
@@ -81,6 +89,15 @@ const AddBookForm = () => {
       aboutAuthorAchievements: "",
     },
   });
+
+  const titleValue = form.watch("title");
+
+  useEffect(() => {
+    if (!slugTouched) {
+      const autoSlug = slugify(titleValue || "");
+      form.setValue("slug", autoSlug, { shouldValidate: false, shouldDirty: false });
+    }
+  }, [titleValue, slugTouched, form]);
 
   const { data, isLoading, isError } = useSmartFetchHook<
     CategoryQueryParams,
@@ -222,6 +239,12 @@ const AddBookForm = () => {
                   and publish a polished listing for your readers without
                   leaving the dashboard.
                 </p>
+                <div className="flex items-center gap-2 text-xs text-amber-500">
+                  <Info className="h-3.5 w-3.5" />
+                  <span>
+                    Pro tip: use short, lowercase, hyphenated slugs so your book URLs are clean and SEO friendly.
+                  </span>
+                </div>
               </div>
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2">
@@ -323,7 +346,18 @@ const AddBookForm = () => {
                           <FormItem>
                             <FormLabel>Slug</FormLabel>
                             <FormControl>
-                              <Input placeholder="Unique slug" {...field} />
+                              <Input
+                                placeholder="Unique slug"
+                                {...field}
+                                onChange={(e) => {
+                                  setSlugTouched(true);
+                                  field.onChange(e);
+                                }}
+                                onBlur={() => {
+                                  setSlugTouched(true);
+                                  field.onBlur?.();
+                                }}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -772,6 +806,7 @@ const AddBookForm = () => {
                       • Use present tense verbs in highlights for energy.
                       <br />• Keep sentences under 18 words for readability.
                       <br />• Add awards or publication dates where relevant.
+                      <br />• Use short, lowercase, hyphenated slugs to help SEO and make URLs easier to share.
                     </p>
                     <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4 text-primary">
                       <p className="text-sm font-medium">
