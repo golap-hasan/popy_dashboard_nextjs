@@ -3,7 +3,6 @@ import type { ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { toast } from "sonner"
 import { format } from "date-fns";
-import { imageUrl } from "@/redux/feature/baseApi";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -35,12 +34,12 @@ export const getInitials = (name: string) => {
 };
 
 // Get Image URL
-export const getImageUrl = (imagePath: string) => {
-  if (!imagePath) return '';
-  // If absolute URL, return as-is
-  if (/^http?:\/\//i.test(imagePath)) return imagePath;
-  return `${imageUrl}/${imagePath}`;
-};
+// export const getImageUrl = (imagePath: string) => {
+//   if (!imagePath) return '';
+//   // If absolute URL, return as-is
+//   if (/^http?:\/\//i.test(imagePath)) return imagePath;
+//   return `${imageUrl}/${imagePath}`;
+// };
 
 // Format Date 
 export const formatDate = (dateString: string) => {

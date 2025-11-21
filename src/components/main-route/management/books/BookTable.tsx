@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 // import { Eye } from "lucide-react";
 import { Pencil } from "lucide-react";
 import type { Book } from "@/redux/feature/book/book.type";
-import { getImageUrl, getInitials } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -88,7 +88,7 @@ const BookTable = ({
               <TableCell>
                 <Avatar className="h-12 w-9 rounded">
                   <AvatarImage
-                    src={book.coverImage ? getImageUrl(book.coverImage) : undefined}
+                    src={book.coverImage ? book.coverImage : undefined}
                     alt={book.title}
                   />
                   <AvatarFallback className="h-12 w-9 bg-muted rounded text-xs">

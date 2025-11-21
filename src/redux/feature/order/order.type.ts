@@ -27,6 +27,7 @@ export interface OrderQueryParams {
   searchTerm?: string;
   page?: number;
   limit?: number;
+  [k: string]: unknown;
 }
 
 export interface OrderResponse {
