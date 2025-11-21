@@ -1,6 +1,6 @@
 "use client";
 import { useState, type ComponentType } from "react";
-import { MoveRight } from "lucide-react";
+import { BookOpen, CloudAlert, MoveRight } from "lucide-react";
 
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import EarningGrowthChart from "@/components/dashboard/EarningGrowthChart";
@@ -73,17 +73,18 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <PageLayout>
-        <p className="text-center text-muted-foreground">Loading dashboard...</p>
-      </PageLayout>
+      <div className="h-[80vh] flex items-center justify-center">
+        <BookOpen className="animate-bounce size-10" />
+      </div>
     );
   }
 
-  if (isError || !data) {
+  if (!isError || !data) {
     return (
-      <PageLayout>
-        <p className="text-center text-destructive">Failed to load dashboard.</p>
-      </PageLayout>
+      <div className="h-[80vh] flex gap-4 items-center justify-center">
+        <CloudAlert className="size-10 text-red-400" />
+        <p className="text-center text-red-400">Failed to load dashboard data.</p>
+      </div>
     );
   }
 
