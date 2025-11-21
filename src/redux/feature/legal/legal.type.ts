@@ -22,7 +22,6 @@ export interface AddOrUpdateLegalPageRequest {
   };
 }
 
-// Contacts management types
 export type Contact = {
   _id: string;
   name: string;
@@ -32,5 +31,11 @@ export type Contact = {
   message: string;
   isReplied: boolean;
   createdAt: string;
+};
+
+export type ContactQueryParams = {
+  searchTerm?: string;
+  page?: number;
+  limit?: number;
 };
 

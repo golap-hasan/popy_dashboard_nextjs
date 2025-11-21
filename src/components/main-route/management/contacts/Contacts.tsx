@@ -10,23 +10,7 @@ import PageLayout from "@/layout/PageLayout";
 import ContactTable from "./ContactTable";
 import useSmartFetchHook from "@/hooks/useSmartFetchHook";
 import { useGetCustomerHelpQuery } from "@/redux/feature/legal/legalApi";
-
-type Contact = {
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-  isReplied: boolean;
-  createdAt: string;
-};
-
-type ContactQueryParams = {
-  searchTerm?: string;
-  page?: number;
-  limit?: number;
-};
+import { Contact, ContactQueryParams } from "@/redux/feature/legal/legal.type";
 
 const Contacts = () => {
   const {

@@ -56,7 +56,7 @@ const ContactTable = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="inline-block cursor-help">
+                      <span className="inline-block">
                         {truncate(contact.message, 40)}
                       </span>
                     </TooltipTrigger>
