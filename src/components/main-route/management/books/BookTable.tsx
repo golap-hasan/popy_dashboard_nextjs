@@ -11,11 +11,23 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 // import { Eye } from "lucide-react";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 import type { Book } from "@/redux/feature/book/book.type";
-import { getInitials } from "@/lib/utils";
+import { ErrorToast, SuccessToast, getInitials } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useDeleteBookMutation } from "@/redux/feature/book/bookApi";
 
 const formatPrice = (price: number) => `৳${Number(price).toLocaleString()}`;
 
@@ -63,6 +75,19 @@ const BookTable = ({
   limit: number;
 }) => {
   const router = useRouter();
+  const [deleteBook, { isLoading: isDeleting }] = useDeleteBookMutation();
+
+  const handleDeleteBook = async (id: string) => {
+    try {
+      const res = await deleteBook(id).unwrap();
+      SuccessToast(res?.message || "Book deleted successfully");
+    } catch (error) {
+      ErrorToast(
+        (error as { data?: { message?: string } })?.data?.message ||
+          "Failed to delete book."
+      );
+    }
+  };
   return (
     <ScrollArea className="w-[calc(100vw-32px)] overflow-hidden overflow-x-auto md:w-full rounded-xl whitespace-nowrap">
       <Table>
@@ -86,7 +111,7 @@ const BookTable = ({
             <TableRow key={book._id}>
               <TableCell>{(page - 1) * limit + index + 1}</TableCell>
               <TableCell>
-                <Avatar className="h-12 w-9 rounded">
+                <Avatar className="h-9 w-9 rounded">
                   <AvatarImage
                     src={book.coverImage ? book.coverImage : undefined}
                     alt={book.title}
@@ -116,7 +141,8 @@ const BookTable = ({
               </TableCell>
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
-                  {typeof book.originalPrice === "number" && book.originalPrice > book.price ? (
+                  {typeof book.originalPrice === "number" &&
+                  book.originalPrice > book.price ? (
                     <span className="text-muted-foreground line-through text-sm">
                       {formatPrice(book.originalPrice)}
                     </span>
@@ -126,7 +152,9 @@ const BookTable = ({
               </TableCell>
               <TableCell>
                 {typeof book.rating === "number" ? book.rating.toFixed(1) : "-"}
-                {typeof book.reviewsCount === "number" ? ` (${book.reviewsCount})` : ""}
+                {typeof book.reviewsCount === "number"
+                  ? ` (${book.reviewsCount})`
+                  : ""}
               </TableCell>
               <TableCell>{book.quantity}</TableCell>
               <TableCell>
@@ -135,16 +163,16 @@ const BookTable = ({
                     book.quantity === 0
                       ? "out_of_stock"
                       : book.quantity <= 50
-                        ? "low_stock"
-                        : "in_stock"
+                      ? "low_stock"
+                      : "in_stock"
                   )}
                   className="capitalize"
                 >
                   {(book.quantity === 0
                     ? "out_of_stock"
                     : book.quantity <= 50
-                      ? "low_stock"
-                      : "in_stock"
+                    ? "low_stock"
+                    : "in_stock"
                   ).replaceAll("_", " ")}
                 </Badge>
               </TableCell>
@@ -152,9 +180,47 @@ const BookTable = ({
                 {timeAgo(book?.createdAt || "")}
               </TableCell> */}
               <TableCell className="flex gap-2 justify-center">
-                <Button onClick={() => router.push(`/management/books/${book?._id}/${book?.slug}`)} variant="outline" size="icon">
+                <Button
+                  onClick={() =>
+                    router.push(`/management/books/${book?._id}/${book?.slug}`)
+                  }
+                  variant="outline"
+                  size="icon"
+                >
                   <Pencil />
                 </Button>
+                {/* Delete Book */}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      disabled={isDeleting}
+                    >
+                      <Trash />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete the book "{book.title}" and remove it from our
+                        servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleDeleteBook(book._id)}
+                      >
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </TableCell>
             </TableRow>
           ))}
