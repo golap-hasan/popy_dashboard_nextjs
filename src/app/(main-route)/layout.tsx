@@ -1,4 +1,5 @@
 import MainLayout from "@/layout/MainLayout";
+import PrivateRoute from "@/provider/PrivateRoute";
 
 export default function MainRouteLayout({
   children,
@@ -6,8 +7,8 @@ export default function MainRouteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <MainLayout>
-      {children}
-    </MainLayout>
+    <PrivateRoute>
+      <MainLayout>{children}</MainLayout>
+    </PrivateRoute>
   );
 }

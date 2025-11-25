@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAddAdminMutation } from "@/redux/feature/admin/adminApi";
 import { ErrorToast, SuccessToast } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import { getRole } from "@/hooks/getRole";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters."),
@@ -32,11 +34,8 @@ const formSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
-interface CreateAdminModalProps {
-  children: React.ReactNode;
-}
-
-const CreateAdminModal = ({ children }: CreateAdminModalProps) => {
+const CreateAdminModal = () => {
+  const adminRole = getRole();
   const [open, setOpen] = useState(false);
   const [addAdmin, { isLoading }] = useAddAdminMutation();
 
@@ -75,7 +74,14 @@ const CreateAdminModal = ({ children }: CreateAdminModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {adminRole === "SUPER_ADMIN" && (
+      <DialogTrigger asChild>
+        <Button>
+          <Plus />
+          Add Admin
+        </Button>
+      </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Add Admin</DialogTitle>
@@ -84,7 +90,10 @@ const CreateAdminModal = ({ children }: CreateAdminModalProps) => {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="name"

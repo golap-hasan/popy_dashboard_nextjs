@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useDeleteAdminMutation } from "@/redux/feature/admin/adminApi";
 import { ErrorToast } from "@/lib/utils";
+import { getRole } from "@/hooks/getRole";
 
 const statusVariant = (status: string) => {
   switch (status?.toLowerCase()) {
@@ -68,6 +69,8 @@ const AdminTable = ({
   page: number;
   limit: number;
 }) => {
+  const adminRole = getRole();
+
   const [deleteAdmin, { isLoading: deleting }] = useDeleteAdminMutation();
 
   const onConfirmDelete = async (id: string) => {
@@ -92,7 +95,9 @@ const AdminTable = ({
             <TableHead>Phone</TableHead>
             <TableHead>Role</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="text-center">Action</TableHead>
+            {adminRole === "SUPER_ADMIN" && (
+              <TableHead className="text-center">Action</TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -130,6 +135,7 @@ const AdminTable = ({
                     {derivedStatus}
                   </Badge>
                 </TableCell>
+                {adminRole === "SUPER_ADMIN" && (
                 <TableCell className="text-center">
                   <AddAdminModal admin={admin} />
                   <AlertDialog>
@@ -158,6 +164,7 @@ const AdminTable = ({
                     </AlertDialogContent>
                   </AlertDialog>
                 </TableCell>
+                )}
               </TableRow>
             );
           })}

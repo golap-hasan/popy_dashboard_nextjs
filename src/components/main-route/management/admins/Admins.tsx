@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { Plus, Search } from "lucide-react";
 import Title from "@/components/ui/Title";
 import { Input } from "@/components/ui/input";
 import CustomPagination from "@/common/CustomPagination";
@@ -10,7 +9,6 @@ import TableSkeleton from "@/components/skeleton/TableSkeleton";
 import NoData from "@/common/NoData";
 import Error from "@/common/Error";
 import AdminTable from "./Admintable";
-import { Button } from "@/components/ui/button";
 import CreateAdminModal from "./CreateAdminModal";
 import useSmartFetchHook from "@/hooks/useSmartFetchHook";
 import {
@@ -20,6 +18,7 @@ import type {
   Admin,
   AdminQueryParams,
 } from "@/redux/feature/admin/admin.types";
+import { Search } from "lucide-react";
 
 const PAGE_LIMIT = 10;
 
@@ -89,12 +88,7 @@ const Admins = () => {
                 }}
               />
             </div>
-            <CreateAdminModal>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Add Admin
-              </Button>
-            </CreateAdminModal>
+            <CreateAdminModal />
           </div>
         </div>
 
