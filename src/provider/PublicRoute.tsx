@@ -1,39 +1,31 @@
 "use client";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
-import type { DecodedToken } from "@/redux/feature/auth/auth.type";
 
 type PublicRouteProps = {
   children: ReactNode;
   redirectTo?: string; // Where to redirect authenticated users (defaults to '/')
 };
 
-const isTokenValid = (token?: string | null) => {
-  if (!token) return false;
-  try {
-    const decoded = jwtDecode<DecodedToken>(token);
-    if (!decoded) return false;
-    const now = Math.floor(Date.now() / 1000);
-    if (typeof decoded.exp === "number" && decoded.exp < now) return false;
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 export default function PublicRoute({ children, redirectTo = "/" }: PublicRouteProps) {
   const router = useRouter();
-  const token = typeof window === "undefined" ? null : localStorage.getItem("accessToken");
-  const valid = isTokenValid(token);
+  const [isVerified, setIsVerified] = useState(false); // To handle client-side only logic
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (valid) {
-      router.replace(redirectTo);
-    }
-  }, [valid, redirectTo, router]);
+    const token = localStorage.getItem("accessToken");
+    const hasToken = !!token; // Only check for token presence
 
-  if (valid) return null;
+    if (hasToken) {
+      router.replace(redirectTo);
+      return;
+    }
+
+    setIsVerified(true);
+  }, [router, redirectTo]);
+
+  if (!isVerified) {
+    // Render a stable placeholder during verification
+    return null; // Or a loading spinner/placeholder if desired
+  }
   return <>{children}</>;
 }
